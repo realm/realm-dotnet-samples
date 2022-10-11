@@ -13,9 +13,9 @@ namespace MigrationTutorial.Models
 
         private string _Type { get; set; }
 
-        public Type Type
+        public ToolType Type
         {
-            get => Enum.Parse<Type>(_Type);
+            get => Enum.Parse<ToolType>(_Type);
             set => _Type = value.ToString();
         }
 
@@ -45,7 +45,7 @@ namespace MigrationTutorial.Models
         IssueInTriage,
     }
 
-    public enum Type
+    public enum ToolType
     {
         ManufacturingMachine,
         ManufacturingTool,

@@ -4,7 +4,7 @@ using System.Linq;
 using MigrationTutorial.Services;
 using MigrationTutorial.Models;
 using Realms;
-using Type = MigrationTutorial.Models.Type;
+using ToolType = MigrationTutorial.Models.ToolType;
 using MigrationTutorial.Utils;
 using MongoDB.Bson;
 using System;
@@ -45,21 +45,21 @@ namespace MigrationTutorial.Migrations
                 {
                     new MachineryAndTool()
                     {
-                        Type = Type.ManufacturingMachine,
+                        Type = ToolType.ManufacturingMachine,
                         Status = OperationalStatus.Functioning,
                         AssignedMaintainer = null,
                         ToolName = "Milling machine"
                     },
                     new MachineryAndTool()
                     {
-                        Type = Type.ManufacturingMachine,
+                        Type = ToolType.ManufacturingMachine,
                         Status = OperationalStatus.Functioning,
                         AssignedMaintainer = null,
                         ToolName = "Press"
                     },
                     new MachineryAndTool()
                     {
-                        Type = Type.PrototypingMachine,
+                        Type = ToolType.PrototypingMachine,
                         Status = OperationalStatus.Functioning,
                         AssignedMaintainer = null,
                         ToolName = "Grinder"
@@ -154,7 +154,7 @@ namespace MigrationTutorial.Migrations
 
             migration.NewRealm.Add(new MachineryAndTool()
             {
-                Type = Type.ManufacturingTool,
+                Type = ToolType.ManufacturingTool,
                 Status = OperationalStatus.Functioning,
                 AssignedMaintainer = null,
                 ToolName = oldConsumable.DynamicApi.Get<string>("_Type"),

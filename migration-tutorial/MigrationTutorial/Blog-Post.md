@@ -498,7 +498,7 @@ img3) *ER diagram of V3 Models*
 
 </br>
 
-After some time, given that the company keeps expanding, a new `Department` called `Workshop` is introduced. This `Department` is now in charge of maintaining `MachineryAndTool`s [(12)](#12-model-v3machineryandtool). Because of this addition the company reclassifies two `Consumable`s, `Brush` *19)* and `GlueHolder` *20)*, as `MachineryAndTool` since it is more environmentally friendly and economically advantageous to properly care for them. 
+After some time, given that the company keeps expanding and so does its needs, a new class of tools is created, `MachineryAndTool`s [(12)](#12-model-v3machineryandtool). Because of this addition the company reclassifies two `Consumable`s, `Brush` *19)* and `GlueHolder` *20)*, as `MachineryAndTool`.  
 
 </br>
 
@@ -513,9 +513,9 @@ public class MachineryAndTool : RealmObject
 
     private string _Type { get; set; }
 
-    public Type Type
+    public ToolType Type
     {
-        get => Enum.Parse<Type>(_Type);
+        get => Enum.Parse<ToolType>(_Type);
         set => _Type = value.ToString();
     }
 
