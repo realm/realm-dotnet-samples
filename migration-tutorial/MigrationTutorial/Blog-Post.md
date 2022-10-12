@@ -26,12 +26,12 @@ If you want to read more about the subject you could start by reading our [intro
 ## Code Overview
 In order to help you browsing faster through the [code](https://github.com/realm/realm-dotnet-samples/tree/main/migration-tutorial) of this tutorial I will briefly go over the structure of the project.
 
-When the application starts for the first time, `Program.Main`[(1)](#1-main) initialises the realm *1)* and then seeds[^fn1] it *2)*.
+When the application starts for the first time, `Program.Main`[(a)](#a-main) initialises the realm *1)* and then seeds[^fn1] it *2)*.
 
 </br>
 
 ---
-#### (1) Main
+#### (a) Main
 ```cs
 class Program
 {
@@ -56,12 +56,12 @@ class Program
 
 </br>
 
-Initialisation[(2)](#2-initialisation-of-the-realm) is executed by `RealmService.Init`. This part of the process prepares the `RealmConfiguration` where we set the name of the database *3)*, assign the, properly bumped up, schema version *4)* and the migration callback *5)*. On top of these steps, the initialisation function takes also care of deleting the realm when it realises that the user is starting over from a previous run *8)*.
+Initialisation[(b)](#b-initialisation-of-the-realm) is executed by `RealmService.Init`. This part of the process prepares the `RealmConfiguration` where we set the name of the database *3)*, assign the, properly bumped up, schema version *4)* and the migration callback *5)*. On top of these steps, the initialisation function takes also care of deleting the realm when it realises that the user is starting over from a previous run *8)*.
 
 </br>
 
 ---
-#### *(2) Initialisation of the realm*
+#### *(b) Initialisation of the realm*
 ```cs
 public class RealmService
 {
@@ -143,7 +143,7 @@ This problem is addressed by using [preprocessor directives](https://docs.micros
 </br>
 
 ---
-#### *(3) Example of usage of preprocessor directives*
+#### *(c) Example of usage of preprocessor directives*
 ```cs
 #if SCHEMA_VERSION_X
 
@@ -159,7 +159,7 @@ public class ClassThatCollides
 
 </br>
 
-The same approach is used in any instance where there are collisions in the logic of the application. An example can be seen in the migration callback *5)* assigned during initialisation[(2)](#2-initialisation-of-the-realm) where the function selects which migration function, `V2Utils.DoMigrate` *6)* or `V3Utils.DoMigrate` *7)*, to include in the compiled assembly based on what version of the migration needs to be executed.  
+The same approach is used in any instance where there are collisions in the logic of the application. An example can be seen in the migration callback *5)* assigned during initialisation[(b)](#b-initialisation-of-the-realm) where the function selects which migration function, `V2Utils.DoMigrate` *6)* or `V3Utils.DoMigrate` *7)*, to include in the compiled assembly based on what version of the migration needs to be executed.  
 Remember that a simple conditional branch would not work as the `preprocessor directive` completely excludes parts of code from the compilation, resulting in e.g. `ClassThatCollides` not existing in the compiled assembly if `SCHEMA_VERSION_X` was not defined when the compilation was launched.  
 Lastly, it is important to remember that it is not granted that clients of an application update in a timely manner. This means that the migration function must be able to migrate the schema over multiple versions at once. Later in the tutorial, you can see how a migration function can deal with this issue.
 
@@ -167,12 +167,12 @@ Lastly, it is important to remember that it is not granted that clients of an ap
 As already mentioned, the business needs of the company change with time and this is inevitably reflected in their database schema. This, in turn, translates to multiple rounds of migrations. This section goes in detail over such migrations in Realm.
 
 ### V1 Models - The beginning
-At the beginning the company only stores information on `Employee`s[(5)](#5-model-v1employee) and of `Consumable`s[(4)](#4-model-v1consumable), mostly to know when to restock and to keep track of expenditures.  
+At the beginning the company only stores information on `Employee`s[(e)](#e-model-v1employee) and of `Consumable`s[(d)](#d-model-v1consumable), mostly to know when to restock and to keep track of expenditures.  
 
 </br>
 
 ---
-#### *(4) Model V1.Consumable*
+#### *(d) Model V1.Consumable*
 ```cs
 public class Consumable : RealmObject
 {
@@ -217,7 +217,7 @@ public enum ConsumableType
 
 ---
 
-#### *(5) Model V1.Employee*
+#### *(e) Model V1.Employee*
 ```cs
 public class Employee : RealmObject
 {
@@ -252,12 +252,12 @@ img2) *ER diagram of V2 Models*
 
 While the company's developers continue refining their internal tool they realise that it is far easier to ensure the correctness of `Employee.Gender` if the field is backed by an `enum` instead of a `string` *10)*. Additionally, the company wants `Consumable`s to be identified by their `ProductId` instead of a randomly generated `Id` *11)*. This will avoid in the future that an employee adds and/or finds multiple entries in the system for the same `Consumable`.  
 Then, `Consumable`s need to have a `Supplier` *13)* and the last purchased price stored *12)*. The last known price is going to be used as a reference for the next purchase. Because of the latter change, `Consumable.Price` is not well indicative any more, so `LastPurchasedPrice` is chosen as a replacement *12)*.  
-More models are also added: `Department`[(8)](#8-model-v2department), `Customer`[(9)](#9-model-v2customer) and `Supplier`[(10)](#10-model-v2supplier).
+More models are also added: `Department`[(h)](#h-model-v2department), `Customer`[(i)](#i-model-v2customer) and `Supplier`[(j)](#j-model-v2supplier).
 
 </br>
 
 ---
-#### *(6) Model V2.Employee*
+#### *(f) Model V2.Employee*
 ```diff
 public class Employee : RealmObject
 {
@@ -292,7 +292,7 @@ public class Employee : RealmObject
 
  ---
 
-#### *(7) Model V2.Consumable*
+#### *(g) Model V2.Consumable*
 ```diff
 public class Consumable : RealmObject
 {
@@ -333,7 +333,7 @@ public class Consumable : RealmObject
 ```
 ---
 
-#### *(8) Model V2.Department*
+#### *(h) Model V2.Department*
 ```cs
 public class Department : RealmObject
 {
@@ -352,7 +352,7 @@ public class Department : RealmObject
 
 ---
 
-#### *(9) Model V2.Customer*
+#### *(i) Model V2.Customer*
 ```cs
 public class Customer : RealmObject
 {
@@ -368,7 +368,7 @@ public class Customer : RealmObject
 
 ---
 
-#### *(10) Model V2.Supplier*
+#### *(j) Model V2.Supplier*
 ```cs
 public class Supplier : RealmObject
 {
@@ -429,7 +429,7 @@ To summarise, in this migration you are going to see how to:
 
 ---
 
-#### *(11) V2 Migration function*
+#### *(k) V2 Migration function*
 ```cs
 public static void DoMigrate(Migration migration, ulong oldSchemaVersion)
 {
@@ -498,13 +498,13 @@ img3) *ER diagram of V3 Models*
 
 </br>
 
-After some time, given that the company keeps expanding and so does its needs, a new class of tools is created, `MachineryAndTool`s [(12)](#12-model-v3machineryandtool). Because of this addition the company reclassifies two `Consumable`s, `Brush` *19)* and `GlueHolder` *20)*, as `MachineryAndTool`.  
+After some time, given that the company keeps expanding and so does its needs, a new class of tools is created, `MachineryAndTool`s [(l)](#l-model-v3machineryandtool). Because of this addition the company reclassifies two `Consumable`s, `Brush` *19)* and `GlueHolder` *20)*, as `MachineryAndTool`.  
 
 </br>
 
 ---
 
-#### *(12) Model V3.MachineryAndTool*
+#### *(l) Model V3.MachineryAndTool*
 ```cs
 public class MachineryAndTool : RealmObject
  {
@@ -539,7 +539,7 @@ public class MachineryAndTool : RealmObject
 
 ---
 
-#### *(13) Model V3.ConsumableTypes*
+#### *(m) Model V3.ConsumableTypes*
 ```diff
 public enum ConsumableType
 {
@@ -566,7 +566,7 @@ To summarise, in this migration you are going to see how to:
 </br>
 
 ---
-#### *(14) V3 Migration function*
+#### *(n) V3 Migration function*
 ```cs
 public static void DoMigrate(Migration migration, ulong oldSchemaVersion)
 {
