@@ -7,9 +7,8 @@
 
 ## Description
 
-This repo contains Realm .NET SDK samples.
-
-The Realm .NET SDK is located at https://github.com/realm/realm-dotnet
+This repo contains [Realm .NET SDK](https://github.com/realm/realm-dotnet) samples:
+* [AnalyticsTelemetry](AnalyticsTelemetry): an example [MAUI](https://github.com/dotnet/maui) app that shows how to use Realm for an Analytics or Telemetry application by using [Atlas Device Sync](https://www.mongodb.com/docs/atlas/app-services/sync/) and [Data Ingest](https://www.mongodb.com/docs/realm/sdk/dotnet/sync/asymmetric-sync/). The project also shows how to visualize the captured data using [MongoDB Charts](https://www.mongodb.com/docs/charts/).
 
 
 ## Usage
