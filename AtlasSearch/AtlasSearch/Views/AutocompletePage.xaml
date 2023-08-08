@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AtlasSearch.ViewModels"
+             x:Class="AtlasSearch.Views.AutocompletePage"
+             Title="Autocomplete Demo"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <ContentPage.BindingContext>
+        <vm:AutocompleteViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:IsNotNullConverter x:Key="IsNotNullConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Text="This demo showcases how to use Atlas Search to build autocomplete experience with match highlighting. It searches through a movie catalog, matching on the film title and displays the plot and the poster of the selected film." Margin="10, 20, 10, 10" />
+
+        <Entry x:Name="SearchEntry"
+               Placeholder="Search for movies"
+               Text="{Binding SearchQuery}"
+               VerticalOptions="Start"
+               HorizontalOptions="FillAndExpand"
+               Margin="10, 10, 10, 0"
+               Grid.Row="1"/>
+
+        <ActivityIndicator IsVisible="{Binding IsSearching}"
+                           IsRunning="{Binding IsSearching}"
+                           Margin="10"
+                           Grid.Row="2"
+                           VerticalOptions="Start" HorizontalOptions="Center" />
+
+        <ListView IsVisible="{Binding HasResults}"
+                  ItemsSource="{Binding Results}"
+                  SeparatorVisibility="None"
+                  Margin="10, 0, 10, 10"
+                  SelectedItem="{Binding SelectedItem}"
+                  Grid.Row="2">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Label HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <Label.FormattedText>
+                                    <MultiBinding Converter="{StaticResource HighlightFormattedStringConverter}" ConverterParameter="Title">
+                                        <Binding />
+                                        <Binding Path="Text" Source="{x:Reference SearchEntry}"/>
+                                    </MultiBinding>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <BoxView HeightRequest="1" Color="Gray" Grid.Row="3"/>
+
+
+        <Grid Grid.Row="4" Margin="10, 0, 10, 10" IsVisible="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Source="{Binding SelectedItem.PosterUrl}"
+                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+                   Aspect="AspectFit" WidthRequest="100" HeightRequest="150" Margin="0, 10, 0, 0" HorizontalOptions="Start" VerticalOptions="Start" />
+            <Label Text="Title" Margin="10" Grid.Row="1" Grid.Column="1" />
+            <Label Margin="10" Grid.Row="1" Grid.Column="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding SelectedItem.Title}" />
+                        <Span Text="{Binding SelectedItem.Year, StringFormat=' ({0})'}" FontAttributes="Bold" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Text="Plot Summary" Margin="10" Grid.Row="2" Grid.Column="1" />
+            <Label Text="{Binding SelectedItem.Plot}" FontAttributes="Italic" Margin="10" Grid.Row="2" Grid.Column="2" />
+        </Grid>
+    </Grid>
+</ContentPage>
