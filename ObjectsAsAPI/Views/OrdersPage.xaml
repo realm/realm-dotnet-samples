@@ -1,12 +1,107 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ObjectsAsAPI.Views.OrdersPage"
-             Title="OrdersPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Orders"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
+             Title="Orders">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
+        <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding AddEntryCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.BindingContext>
+        <vm:OrdersViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid RowDefinitions="2*, 60, 1.1*">
+            <ListView ItemsSource="{Binding Orders}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  Grid.Row="0">
+                <ListView.Behaviors>
+                    <toolkit:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
+                        Command="{Binding EditEntryCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Delete" IsDestructive="true" 
+                                       Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference entriesPage}}" 
+                                       CommandParameter="{Binding .}" />
+                            </ViewCell.ContextActions>
+                            <Grid RowDefinitions="*, 1*"
+                                  ColumnDefinitions="2*, 1*"
+                                  Padding="10"> 
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Content.OrderName}"
+                                       FontSize="Body"/>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Content.CreatedAt, StringFormat='{0:dddd, MMMM d yyyy}'}"
+                                       FontSize="Small"
+                                       TextColor="Gray"/>
+                                <Label Grid.RowSpan="2" Grid.Column="1"
+                                       Text="{Binding Status}"
+                                       FontSize="Caption"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Grid.Row="1" Orientation="Horizontal"
+                            Padding="10,0,20,0"
+                            BackgroundColor="#E3FCF7">
+                <Label Text="Pending"
+                        FontSize="Large"
+                        HorizontalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        HorizontalOptions="StartAndExpand"/>
+                <Button ImageSource="{Binding ConnectionStatusIcon}"
+                            Command="{Binding ChangeConnectionStatusCommand}"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"/>
+            </StackLayout>
+            <ListView ItemsSource="{Binding Orders}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  Grid.Row="2">
+                <ListView.Behaviors>
+                    <toolkit:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
+                        Command="{Binding EditEntryCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid RowDefinitions="*, 1*"
+                                  ColumnDefinitions="2*, 1*"
+                                  Padding="10"> 
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Content.OrderName}"
+                                       FontSize="Body"/>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Content.CreatedAt, StringFormat='{0:dddd, MMMM d yyyy}'}"
+                                       FontSize="Small"
+                                       TextColor="Gray"/>
+                                <Label Grid.RowSpan="2" Grid.Column="1"
+                                       Text="{Binding Status}"
+                                       FontSize="Caption"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>
