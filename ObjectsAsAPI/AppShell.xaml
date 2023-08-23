@@ -3,13 +3,22 @@
     x:Class="ObjectsAsAPI.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ObjectsAsAPI"
+    xmlns:views="clr-namespace:ObjectsAsAPI.Views"
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+
+    <TabBar Route="main">
+       <Tab Title="Orders">
+           <ShellContent ContentTemplate="{DataTemplate views:OrdersPage}" Route="orders" />
+       </Tab>
+       <Tab Title="Requests">
+           <ShellContent ContentTemplate="{DataTemplate views:RequestsPage}" Route="requests" />
+       </Tab>
+    </TabBar>
 
 </Shell>
 
