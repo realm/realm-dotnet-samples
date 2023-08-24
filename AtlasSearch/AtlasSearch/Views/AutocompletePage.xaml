@@ -19,9 +19,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
         </Grid.RowDefinitions>
 
         <Label Text="This demo showcases how to use Atlas Search to build autocomplete experience with match highlighting. It searches through a movie catalog, matching on the film title and displays the plot and the poster of the selected film." Margin="10, 20, 10, 10" />
@@ -64,36 +64,56 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <BoxView HeightRequest="1" Color="Gray" Grid.Row="3"/>
+        <BoxView HeightRequest="0" Color="Gray" Grid.Row="3"/>
 
-        <Grid Grid.Row="4" Margin="10, 0, 10, 10" IsVisible="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <ScrollView IsVisible="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}"
+                    Grid.Row="4"
+                    Margin="10, 0, 10, 10"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Image Source="{Binding SelectedItem.PosterUrl}"
-                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
-                   Aspect="AspectFit" WidthRequest="100" HeightRequest="150" Margin="0, 10, 0, 0" HorizontalOptions="Start" VerticalOptions="Start" />
-            <Label Text="Title" Margin="10" Grid.Row="1" Grid.Column="1" />
-            <Label Margin="10" Grid.Row="1" Grid.Column="2">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="{Binding SelectedItem.Title}" />
-                        <Span Text="{Binding SelectedItem.Year, StringFormat=' ({0})'}" FontAttributes="Bold" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+                <Image Source="{Binding SelectedItem.PosterUrl}"
+                       Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+                       Aspect="AspectFit"
+                       WidthRequest="100" HeightRequest="150"
+                       Margin="0, 10, 0, 0"
+                       HorizontalOptions="Start" VerticalOptions="Start" />
 
-            <Label Text="Plot Summary" Margin="10" Grid.Row="2" Grid.Column="1" />
-            <Label Text="{Binding SelectedItem.Plot}" FontAttributes="Italic" Margin="10" Grid.Row="2" Grid.Column="2" />
-        </Grid>
+                <Label Text="Title"
+                       Margin="10"
+                       Grid.Row="1" Grid.Column="1" />
+                <Label Margin="0, 10, 10, 10"
+                       Grid.Row="1" Grid.Column="2">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding SelectedItem.Title}" />
+                            <Span Text="{Binding SelectedItem.Year, StringFormat=' ({0})'}" FontAttributes="Bold" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label Text="Plot"
+                       Margin="10"
+                       Grid.Row="2" Grid.Column="1" />
+                <Label Text="{Binding SelectedItem.Plot}"
+                       FontAttributes="Italic"
+                       Margin="0, 10, 10, 10"
+                       HorizontalOptions="Fill"
+                       HorizontalTextAlignment="Start"
+                       Grid.Row="2" Grid.Column="2" />
+            </Grid>
+        </ScrollView>
     </Grid>
 </ContentPage>

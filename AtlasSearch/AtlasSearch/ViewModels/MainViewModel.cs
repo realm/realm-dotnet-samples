@@ -7,7 +7,8 @@ namespace AtlasSearch.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    public async Task InitializeSearch()
+    [RelayCommand]
+    private static async Task InitializeSearch()
     {
         if (SearchService.IsInitialized)
         {
