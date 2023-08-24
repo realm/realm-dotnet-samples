@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
+             x:Class="ObjectsAsAPI.Views.CreateModifyOrderPage"
+             Title="CreateModifyOrderPage"
+             x:Name="page">
+    <ContentPage.BindingContext>
+        <vm:CreateModifyOrderViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid RowDefinitions="4*, 1*">
+            <ScrollView Grid.Row="0">
+                <StackLayout Orientation="Vertical" Margin="20" Spacing="10">
+                    <Editor Text="{Binding OrderContent.OrderName}" HorizontalOptions="Fill"
+                            Placeholder="Order Name"/>
+                                        <Button Text="+ Add Item" Command="{Binding AddItemCommand}"/>
+                    <StackLayout BindableLayout.ItemsSource="{Binding OrderContent.Items}" Spacing="15">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Orientation="Horizontal" Spacing="10">
+                                    <Entry Text="{Binding ItemQuantity}" VerticalOptions="Center" Keyboard="Numeric"/>
+                                    <Entry Text="{Binding ItemName}"
+                                           Keyboard="Email"
+                                           HorizontalOptions="FillAndExpand"
+                                           VerticalOptions="Center"/>
+                                    <Button Text="X" FontSize="Medium"
+								        Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference page}}"
+                                        CommandParameter="{Binding .}"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+            <VerticalStackLayout BackgroundColor="#E3FCF7"
+                Padding="15" Spacing="15"
+                Grid.Row="1">
+                <Button Text="Confirm" Command="{Binding ConfirmCommand}"/>
+                <Button Text="Delete" Command="{Binding DeleteCommand}"/>
+            </VerticalStackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

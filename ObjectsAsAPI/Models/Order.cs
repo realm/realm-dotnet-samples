@@ -24,18 +24,16 @@ public partial class Order : IRealmObject
 
 public partial class OrderContent : IEmbeddedObject
 {
-    public Guid ShipId { get; }
-
     public DateTimeOffset CreatedAt { get; set; }
 
     public IList<OrderItem> Items { get; } = null!; //TODO Need to fix nullability
 
-    public string OrderName { get; set; } = null!; //TODO Need to fix nullability
+    public string? OrderName { get; set; }
 }
 
 public partial class OrderItem : IEmbeddedObject
 {
-    public string ItemName { get; set; } = null!;
+    public string? ItemName { get; set; }
 
     public int ItemQuantity { get; set; }
 }

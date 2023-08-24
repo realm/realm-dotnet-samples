@@ -2,16 +2,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="ObjectsAsAPI.Views.OrdersPage"
              xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
+             xmlns:utils="clr-namespace:ObjectsAsAPI.Utils"
+             x:Class="ObjectsAsAPI.Views.OrdersPage"
              Title="Orders">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
-        <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding AddEntryCommand}" />
+        <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding AddOrderCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <vm:OrdersViewModel/>
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+         <ResourceDictionary>
+             <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
+         </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <Grid RowDefinitions="2*, 60, 1.1*">
             <ListView ItemsSource="{Binding Orders}"
@@ -41,7 +47,7 @@
                                        FontSize="Body"/>
                                 <Label Grid.Row="1" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Content.CreatedAt, StringFormat='{0:dddd, MMMM d yyyy}'}"
+                                       Text="{Binding Content.CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"
                                        FontSize="Small"
                                        TextColor="Gray"/>
                                 <Label Grid.RowSpan="2" Grid.Column="1"
@@ -67,7 +73,7 @@
                             HorizontalOptions="End"
                             VerticalOptions="Center"/>
             </StackLayout>
-            <ListView ItemsSource="{Binding Orders}"
+            <ListView ItemsSource="{Binding Requests}"
                   SelectionMode="None"
                   HasUnevenRows="True"
                   Grid.Row="2">
@@ -85,11 +91,11 @@
                                   Padding="10"> 
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Content.OrderName}"
+                                       Text="{Binding RequestId}"
                                        FontSize="Body"/>
                                 <Label Grid.Row="1" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Content.CreatedAt, StringFormat='{0:dddd, MMMM d yyyy}'}"
+                                       Text="{Binding CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"
                                        FontSize="Small"
                                        TextColor="Gray"/>
                                 <Label Grid.RowSpan="2" Grid.Column="1"

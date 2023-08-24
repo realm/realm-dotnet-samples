@@ -40,6 +40,8 @@ public static class RealmService
 
     public static Realm GetMainThreadRealm()
     {
+        return Realm.GetInstance(); //TODO For testing
+
         if (!MainThread.IsMainThread)
         {
             throw new InvalidOperationException("This method should be called only from the main thread!");
