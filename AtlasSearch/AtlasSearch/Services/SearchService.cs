@@ -11,11 +11,17 @@ namespace AtlasSearch.Services;
 
 public static class SearchService
 {
+    private static readonly Lazy<Task> _initializeTask = new(InitializeCore);
+
     private static RealmApp _app = null!;
     private static MongoClient.Collection<Movie> _movieCollection = null!;
     private static MongoClient.Collection<Listing> _listingCollection = null!;
 
-    public static async Task Initialize()
+    public static bool IsInitialized => _initializeTask is { IsValueCreated: true, Value.IsCompleted: true };
+
+    public static Task Initialize() => _initializeTask.Value;
+
+    private static async Task InitializeCore()
     {
         using var configStream = await FileSystem.Current.OpenAppPackageFileAsync("config.json");
 
@@ -138,7 +144,7 @@ public static class SearchService
     {
         public string? AppId { get; set; }
 
-        public string ServerUrl { get; set; } = "https://realm-qa.mongodb.com";
+        public string ServerUrl { get; set; } = "https://realm.mongodb.com";
 
         public string ServiceName { get; set; } = "mongodb-atlas";
     }

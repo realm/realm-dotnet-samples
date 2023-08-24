@@ -38,11 +38,12 @@
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\mongodb.png" Color="#00684A" />
 
-		<!-- Images -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiImage Include="Resources\Images\atlas_search.png" />
 		<MauiAsset Include="config.json">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</MauiAsset>
+
+		<AdditionalFiles Include="..\..\.stylecop-rules\stylecop.json" Link="stylecop.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -56,16 +57,5 @@
 		</PackageReference>
 		<PackageReference Include="Acr.UserDialogs" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <AdditionalFiles Include="..\..\.stylecop-rules\stylecop.json" Link="stylecop.json" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Resources\Images\atlas_search.png" />
-	  <None Remove="config.json" />
-	</ItemGroup>
-	<ItemGroup>
-	  <MauiImage Include="Resources\Images\atlas_search.png" />
 	</ItemGroup>
 </Project>

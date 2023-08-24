@@ -7,13 +7,13 @@ namespace AtlasSearch.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    public MainViewModel()
+    public async Task InitializeSearch()
     {
-        _ = InitializeSearch();
-    }
+        if (SearchService.IsInitialized)
+        {
+            return;
+        }
 
-    private static async Task InitializeSearch()
-    {
         try
         {
             using var loadingDialog = UserDialogs.Instance.Loading("Initializing Realm service");

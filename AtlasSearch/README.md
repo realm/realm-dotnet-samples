@@ -19,7 +19,7 @@ Once the workload is installed Visual Studio should ask you to install additiona
 ## Configuration
 
 In order to run the example project you need to:
-- Create an Atlas Cluster and [load the sample data](https://www.mongodb.com/docs/atlas/sample-data/).
+- Create an Atlas Cluster and follow the [load sample data](https://www.mongodb.com/docs/atlas/sample-data/) instructions to load the `sample_airbnb` and `sample_mflix` datasets.
 - Complete the [Define an Index with Autocomplete](https://www.mongodb.com/docs/atlas/atlas-search/tutorial/autocomplete-tutorial/#define-an-index-with-autocomplete) and [Create the Atlas \[GeoJson\] Search Index](https://www.mongodb.com/docs/atlas/atlas-search/tutorial/run-geo-query/#create-the-fts-index) sections from the Atlas Search tutorials.
 - Create an Atlas App Services application and set its app id in config.json
 - Enable [Anonymous Authentication](https://www.mongodb.com/docs/atlas/app-services/authentication/anonymous/). The example project use anonymous authentication for simplicity, but feel free to use the authentication provider you prefer.
