@@ -1,5 +1,7 @@
 ﻿using MongoDB.Bson;
 using Realms;
+using Realms.Schema;
+using Realms.Weaving;
 
 namespace ObjectsAsAPI.Models;
 
@@ -35,11 +37,13 @@ public enum RequestStatus
 
 public interface IPayload
 {
-    // ???
+    public ObjectId CreatorId { get; }
 }
 
 public interface IResponse
 {
+    public ObjectId CreatorId { get; }
+
     public ResponseStatus Status { get; set; }
 
     // Filled if Status == Rejected
@@ -57,11 +61,15 @@ public enum ResponseStatus
 
 public partial class CreatedOrderRequestPayload : IRealmObject, IPayload
 {
+    public ObjectId CreatorId { get; }
+
     public OrderContent? Content { get; set; }
 }
 
 public partial class CreateOrderRequestResponse : IRealmObject, IResponse
 {
+    public ObjectId CreatorId { get; }
+
     public Order? Order { get; set; }
 
     private string _Status { get; set; } = null!; //TODO Need to fix nullability
