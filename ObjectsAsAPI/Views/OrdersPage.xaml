@@ -92,7 +92,7 @@
                                   Padding="10"> 
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding RequestId}"
+                                       Text="{Binding Id}"
                                        FontSize="Body"/>
                                 <Label Grid.Row="1" Grid.Column="0"
                                        VerticalTextAlignment="Center"
