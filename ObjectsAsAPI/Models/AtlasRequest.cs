@@ -25,9 +25,6 @@ public partial class AtlasRequest : IRealmObject
     [MapTo("createdAt")]
     public DateTimeOffset CreatedAt { get; set; }
 
-    [MapTo("handledAt")]
-    public DateTimeOffset HandledAt { get; set; }
-
     [MapTo("payload")]
     public RealmValue Payload { get; set; }
 
@@ -63,7 +60,6 @@ public enum RequestStatus
 
 public interface IPayload
 {
-    //IF these were embedded we wouldn't need those two
     public string CreatorId { get; set; }
 
     public ObjectId Id { get; set; }
@@ -90,7 +86,7 @@ public enum ResponseStatus
     Rejected,
 }
 
-public partial class CreateOrderRequestPayload : IRealmObject, IPayload
+public partial class CreateOrderPayload : IRealmObject, IPayload
 {
     [PrimaryKey]
     [MapTo("_id")]
@@ -102,7 +98,7 @@ public partial class CreateOrderRequestPayload : IRealmObject, IPayload
     [MapTo("content")]
     public OrderContent? Content { get; set; }
 
-    public CreateOrderRequestPayload()
+    public CreateOrderPayload()
     {
         if (RealmService.CurrentUser == null)
         {
@@ -113,7 +109,7 @@ public partial class CreateOrderRequestPayload : IRealmObject, IPayload
     }
 }
 
-public partial class CreateOrderRequestResponse : IRealmObject, IResponse
+public partial class CreateOrderResponse : IRealmObject, IResponse
 {
     [PrimaryKey]
     [MapTo("_id")]

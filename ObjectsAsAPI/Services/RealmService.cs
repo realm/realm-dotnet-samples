@@ -108,7 +108,7 @@ public static class RealmService
             {
                 var myOrders = realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id);
                 var myRequests = realm.All<AtlasRequest>().Where(r => r.CreatorId == CurrentUser.Id);
-                var myCreateOrderPayload = realm.All<CreatedOrderRequestPayload>().Where(r => r.CreatorId == CurrentUser.Id);
+                var myCreateOrderPayload = realm.All<CreateOrderRequestPayload>().Where(r => r.CreatorId == CurrentUser.Id);
                 var myCreateOrderResponse = realm.All<CreateOrderRequestResponse>().Where(r => r.CreatorId == CurrentUser.Id);
                 //TODO Here we need the other kinds too
 
