@@ -13,6 +13,7 @@ public partial class AtlasRequest : IRealmObject
     [MapTo("_creatorId")]
     public string CreatorId { get; set; }
 
+    [MapTo("status")]
     private string _Status { get; set; } = null!;
 
     public RequestStatus Status
@@ -21,12 +22,16 @@ public partial class AtlasRequest : IRealmObject
         set => _Status = value.ToString();
     }
 
+    [MapTo("createdAt")]
     public DateTimeOffset CreatedAt { get; set; }
 
+    [MapTo("handledAt")]
     public DateTimeOffset HandledAt { get; set; }
 
+    [MapTo("payload")]
     public RealmValue Payload { get; set; }
 
+    [MapTo("response")]
     public RealmValue Response { get; set; }
 
     public AtlasRequest()
@@ -38,6 +43,14 @@ public partial class AtlasRequest : IRealmObject
 
         CreatorId = RealmService.CurrentUser.Id;
         CreatedAt = DateTimeOffset.Now;
+    }
+
+    partial void OnPropertyChanged(string? propertyName)
+    {
+        if (propertyName == nameof(_Status))
+        {
+            RaisePropertyChanged(nameof(Status));
+        }
     }
 }
 
@@ -77,7 +90,7 @@ public enum ResponseStatus
     Rejected,
 }
 
-public partial class CreatedOrderRequestPayload : IRealmObject, IPayload
+public partial class CreateOrderRequestPayload : IRealmObject, IPayload
 {
     [PrimaryKey]
     [MapTo("_id")]
@@ -86,9 +99,10 @@ public partial class CreatedOrderRequestPayload : IRealmObject, IPayload
     [MapTo("_creatorId")]
     public string CreatorId { get; set; }
 
+    [MapTo("content")]
     public OrderContent? Content { get; set; }
 
-    public CreatedOrderRequestPayload()
+    public CreateOrderRequestPayload()
     {
         if (RealmService.CurrentUser == null)
         {
@@ -108,8 +122,10 @@ public partial class CreateOrderRequestResponse : IRealmObject, IResponse
     [MapTo("_creatorId")]
     public string CreatorId { get; private set; } = null!;
 
+    [MapTo("order")]
     public Order? Order { get; private set; }
 
+    [MapTo("status")]
     private string _Status { get; set; } = null!;
 
     public ResponseStatus Status
@@ -118,6 +134,7 @@ public partial class CreateOrderRequestResponse : IRealmObject, IResponse
         private set => _Status = value.ToString();
     }
 
+    [MapTo("rejectedReason")]
     public string? RejectedReason { get; private set; }
 }
 
