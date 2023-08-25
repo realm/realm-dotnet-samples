@@ -3,32 +3,39 @@ using Realms;
 
 namespace ObjectsAsAPI.Models;
 
+//TODO Putting the setter as private to "simulate" readonly-ness
 public partial class Order : IRealmObject
 {
-    public ObjectId CreatorId { get; set; }
+    [PrimaryKey]
+    [MapTo("_id")]
+    public ObjectId Id { get; private set; }
 
-    public ObjectId OrderId { get; set; }
+    [MapTo("_creatorId")]
+    public string CreatorId { get; private set; } = null!;
 
-    public OrderContent? Content { get; set; }
+    public OrderContent? Content { get; private set; }
 
-    private string _Status { get; set; } = null!; //TODO Need to fix nullability
+    private string _Status { get; set; } = null!;
 
     public OrderStatus Status
     {
         get => Enum.Parse<OrderStatus>(_Status);
-        set => _Status = value.ToString();
+        private set => _Status = value.ToString();
     }
-
-    public bool RequestedChange { get; set; }
 }
 
 public partial class OrderContent : IEmbeddedObject
 {
     public DateTimeOffset CreatedAt { get; set; }
 
-    public IList<OrderItem> Items { get; } = null!; //TODO Need to fix nullability
+    public IList<OrderItem> Items { get; } = null!;
 
     public string? OrderName { get; set; }
+
+    public OrderContent()
+    {
+        CreatedAt = DateTimeOffset.Now;
+    }
 }
 
 public partial class OrderItem : IEmbeddedObject

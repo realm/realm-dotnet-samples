@@ -9,6 +9,7 @@ public partial class AppShell : Shell
 		InitializeComponent();
 
         Routing.RegisterRoute("createModifyOrder", typeof(CreateModifyOrderPage));
+        Routing.RegisterRoute("order", typeof(OrderPage));
     }
 }
 

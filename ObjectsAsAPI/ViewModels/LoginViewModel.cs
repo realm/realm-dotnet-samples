@@ -24,9 +24,6 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     public async Task Login()
     {
-        await GoToMainPage();
-        return;
-
         if (!await VeryifyEmailAndPassword())
         {
             return;

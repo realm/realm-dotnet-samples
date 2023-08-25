@@ -1,8 +1,7 @@
-﻿using Realms;
+﻿using ObjectsAsAPI.Models;
+using Realms;
 using Realms.Sync;
-using Realms.Sync.ErrorHandling;
 using System.Diagnostics.CodeAnalysis;
-using Credentials = Realms.Sync.Credentials;
 
 namespace ObjectsAsAPI.Services;
 
@@ -40,17 +39,12 @@ public static class RealmService
 
     public static Realm GetMainThreadRealm()
     {
-        return Realm.GetInstance(); //TODO For testing
-
         if (!MainThread.IsMainThread)
         {
             throw new InvalidOperationException("This method should be called only from the main thread!");
         }
 
-        if (_mainThreadRealm is null)
-        {
-            _mainThreadRealm = Realm.GetInstance(GetRealmConfig());
-        }
+        _mainThreadRealm ??= Realm.GetInstance(GetRealmConfig());
 
         return _mainThreadRealm;
     }
@@ -70,17 +64,8 @@ public static class RealmService
 
         await _app.LogInAsync(Credentials.EmailPassword(email, password));
 
-        // Creates a CancellationTokenSource that will be cancelled after 4 seconds.
-        var cts = new CancellationTokenSource(4000);
-
-        try
-        {
-            using var realm = await Realm.GetInstanceAsync(GetRealmConfig(), cts.Token);
-        }
-        catch (TaskCanceledException)
-        {
-            // If there are connectivity issues, or the synchronization is taking too long we arrive here
-        }
+        // After logging in we want to wait for synchronization to happen
+        using var realm = await Realm.GetInstanceAsync(GetRealmConfig());
     }
 
     public static async Task LogoutAsync()
@@ -110,8 +95,7 @@ public static class RealmService
         }
     }
 
-    private static FlexibleSyncConfiguration GetRealmConfig(SyncConfigurationBase.SessionErrorCallback? sessionErrorCallback = null,
-        ClientResetHandlerBase? clientResetHandler = null)
+    private static FlexibleSyncConfiguration GetRealmConfig()
     {
         if (CurrentUser == null)
         {
@@ -122,8 +106,16 @@ public static class RealmService
         {
             PopulateInitialSubscriptions = (realm) =>
             {
-                //var query = realm.All<JournalEntry>().Where(j => j.UserId == CurrentUser.Id);
-                //realm.Subscriptions.Add(query, new SubscriptionOptions { Name = "myEntries" });
+                var myOrders = realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id);
+                var myRequests = realm.All<AtlasRequest>().Where(r => r.CreatorId == CurrentUser.Id);
+                var myCreateOrderPayload = realm.All<CreatedOrderRequestPayload>().Where(r => r.CreatorId == CurrentUser.Id);
+                var myCreateOrderResponse = realm.All<CreateOrderRequestResponse>().Where(r => r.CreatorId == CurrentUser.Id);
+                //TODO Here we need the other kinds too
+
+                realm.Subscriptions.Add(myOrders);
+                realm.Subscriptions.Add(myRequests);
+                realm.Subscriptions.Add(myCreateOrderPayload);
+                realm.Subscriptions.Add(myCreateOrderResponse);
             },
         };
 

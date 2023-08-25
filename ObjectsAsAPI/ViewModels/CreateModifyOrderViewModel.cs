@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ObjectsAsAPI.Models;
+using ObjectsAsAPI.Services;
 using Realms;
 
 namespace ObjectsAsAPI.ViewModels;
@@ -25,11 +26,10 @@ public partial class CreateModifyOrderViewModel : BaseViewModel
         {
             Status = RequestStatus.Draft,
             Payload = requestPayload,
-            CreatedAt = DateTimeOffset.Now, //TODO This and some others could be in the constructor
         };
 
         _orderContent = requestPayload.Content;
-        _realm = Realm.GetInstance();
+        _realm = RealmService.GetMainThreadRealm();
 
         _realm.Write(() =>
         {

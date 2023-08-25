@@ -16,6 +16,7 @@
     <ContentPage.Resources>
          <ResourceDictionary>
              <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
+             <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
          </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -28,14 +29,14 @@
                     <toolkit:EventToCommandBehavior
                         EventName="ItemTapped"
                         EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
-                        Command="{Binding EditEntryCommand}"/>
+                        Command="{Binding OpenOrderCommand}"/>
                 </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.ContextActions>
-                                <MenuItem Text="Delete" IsDestructive="true" 
-                                       Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference entriesPage}}" 
+                                <MenuItem Text="Cancel" IsDestructive="false" 
+                                       Command="{Binding Path=BindingContext.CancelOrder, Source={x:Reference entriesPage}}" 
                                        CommandParameter="{Binding .}" />
                             </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"
