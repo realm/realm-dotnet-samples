@@ -108,8 +108,8 @@ public static class RealmService
             {
                 var myOrders = realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id);
                 var myRequests = realm.All<AtlasRequest>().Where(r => r.CreatorId == CurrentUser.Id);
-                var myCreateOrderPayload = realm.All<CreateOrderRequestPayload>().Where(r => r.CreatorId == CurrentUser.Id);
-                var myCreateOrderResponse = realm.All<CreateOrderRequestResponse>().Where(r => r.CreatorId == CurrentUser.Id);
+                var myCreateOrderPayload = realm.All<CreateOrderPayload>().Where(r => r.CreatorId == CurrentUser.Id);
+                var myCreateOrderResponse = realm.All<CreateOrderResponse>().Where(r => r.CreatorId == CurrentUser.Id);
                 //TODO Here we need the other kinds too
 
                 realm.Subscriptions.Add(myOrders);

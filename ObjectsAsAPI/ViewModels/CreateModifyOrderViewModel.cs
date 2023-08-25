@@ -17,7 +17,7 @@ public partial class CreateModifyOrderViewModel : BaseViewModel
 
     public CreateModifyOrderViewModel()
     {
-        var requestPayload = new CreateOrderRequestPayload
+        var requestPayload = new CreateOrderPayload
         {
             Content = new OrderContent(),
         };
