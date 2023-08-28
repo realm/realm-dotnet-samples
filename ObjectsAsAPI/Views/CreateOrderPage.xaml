@@ -10,8 +10,14 @@
         <vm:CreateOrderViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <Grid RowDefinitions="4*, 1*">
-            <ScrollView Grid.Row="0" IsVisible="{Binding IsDraft}">
+        <Grid RowDefinitions="40, 4*, 1*">
+            <Label Text="{Binding Request.StatusString}"
+                   FontSize="Large"
+                   BackgroundColor="AliceBlue"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   Grid.Row="0"/>
+            <ScrollView Grid.Row="1" IsVisible="{Binding IsDraft}">
                 <StackLayout Orientation="Vertical" Margin="20" Spacing="10">
                     <Editor Text="{Binding OrderContent.OrderName}" HorizontalOptions="Fill"
                             Placeholder="Order Name"/>
@@ -37,7 +43,7 @@
             <ListView ItemsSource="{Binding OrderContent.Items}" IsVisible="{Binding IsNotDraft}"
                   SelectionMode="None"
                   HasUnevenRows="True"
-                  Grid.Row="0">
+                  Grid.Row="1">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding ItemName}"
@@ -48,7 +54,7 @@
             </ListView>
             <VerticalStackLayout BackgroundColor="#E3FCF7" IsVisible="{Binding IsDraft}"
                 Padding="15" Spacing="15"
-                Grid.Row="1">
+                Grid.Row="2">
                 <Button Text="Confirm" Command="{Binding ConfirmCommand}"/>
                 <Button Text="Delete" Command="{Binding DeleteCommand}"/>
             </VerticalStackLayout>

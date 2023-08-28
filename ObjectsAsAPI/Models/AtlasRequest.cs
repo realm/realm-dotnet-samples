@@ -60,7 +60,21 @@ public partial class AtlasRequest : IRealmObject
                 }
             }
 
-            return $"{status}{requestType}{(string.IsNullOrEmpty(orderName)? "" : "- {orderName}" )}";
+            return $"{status}{requestType}{(string.IsNullOrEmpty(orderName)? "" : $" - {orderName}" )}";
+        }
+    }
+
+    public string? StatusString
+    {
+        get
+        {
+            return Status switch
+            {
+                RequestStatus.Draft => "Draft",
+                RequestStatus.Pending => "Pending",
+                RequestStatus.Handled => (Response.AsIRealmObject() as IResponse)?.Status.ToString(),
+                _ => throw new NotImplementedException(),
+            };
         }
     }
 
@@ -77,7 +91,6 @@ public partial class AtlasRequest : IRealmObject
 
     partial void OnPropertyChanged(string? propertyName)
     {
-        //TODO Can we do something so that we raise a notification when the Payload changes?
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
