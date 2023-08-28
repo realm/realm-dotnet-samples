@@ -8,7 +8,7 @@
              Title="Orders">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
-        <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding AddOrderCommand}" />
+        <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding CreateOrderRequestCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <vm:OrdersViewModel/>
@@ -16,11 +16,12 @@
     <ContentPage.Resources>
          <ResourceDictionary>
              <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
+             <utils:EnumToColorConverter x:Key="enumToColorConverter"/>
              <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
          </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid RowDefinitions="2*, 60, 1.1*">
+        <Grid RowDefinitions="2*, 60, 2*">
             <ListView ItemsSource="{Binding Orders}"
                   SelectionMode="None"
                   HasUnevenRows="True"
@@ -53,6 +54,8 @@
                                        TextColor="Gray"/>
                                 <Label Grid.RowSpan="2" Grid.Column="1"
                                        Text="{Binding Status}"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding Status, Converter={StaticResource enumToColorConverter}}"
                                        FontSize="Caption"
                                        VerticalTextAlignment="Center"
                                        HorizontalTextAlignment="Center"/>
@@ -82,7 +85,7 @@
                     <toolkit:EventToCommandBehavior
                         EventName="ItemTapped"
                         EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
-                        Command="{Binding EditEntryCommand}"/>
+                        Command="{Binding OpenRequestCommand}"/>
                 </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -101,6 +104,8 @@
                                        TextColor="Gray"/>
                                 <Label Grid.RowSpan="2" Grid.Column="1"
                                        Text="{Binding Status}"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding Status, Converter={StaticResource enumToColorConverter}}"
                                        FontSize="Caption"
                                        VerticalTextAlignment="Center"
                                        HorizontalTextAlignment="Center"/>

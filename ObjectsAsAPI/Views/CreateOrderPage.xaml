@@ -4,14 +4,14 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
              x:Class="ObjectsAsAPI.Views.CreateModifyOrderPage"
-             Title="CreateModifyOrderPage"
+             Title="{Binding OrderContent.OrderName}"
              x:Name="page">
     <ContentPage.BindingContext>
-        <vm:CreateModifyOrderViewModel/>
+        <vm:CreateOrderViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid RowDefinitions="4*, 1*">
-            <ScrollView Grid.Row="0">
+            <ScrollView Grid.Row="0" IsVisible="{Binding IsDraft}">
                 <StackLayout Orientation="Vertical" Margin="20" Spacing="10">
                     <Editor Text="{Binding OrderContent.OrderName}" HorizontalOptions="Fill"
                             Placeholder="Order Name"/>
@@ -34,7 +34,19 @@
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
-            <VerticalStackLayout BackgroundColor="#E3FCF7"
+            <ListView ItemsSource="{Binding OrderContent.Items}" IsVisible="{Binding IsNotDraft}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  Grid.Row="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding ItemName}"
+                              Detail="{Binding ItemQuantity, StringFormat='x {0}'}">
+                        </TextCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <VerticalStackLayout BackgroundColor="#E3FCF7" IsVisible="{Binding IsDraft}"
                 Padding="15" Spacing="15"
                 Grid.Row="1">
                 <Button Text="Confirm" Command="{Binding ConfirmCommand}"/>

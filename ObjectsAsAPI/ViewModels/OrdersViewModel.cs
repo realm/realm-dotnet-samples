@@ -25,50 +25,43 @@ public partial class OrdersViewModel : BaseViewModel
     {
         _realm = RealmService.GetMainThreadRealm();
 
-        Orders = _realm.All<Order>();
-        Requests = _realm.All<AtlasRequest>();
-
-        if (!Orders.Any())
-        {
-            //var orders = new List<Order>
-            //{
-            //    new Order
-            //    {
-            //        Status = OrderStatus.Processing,
-            //        Content = new OrderContent
-            //        {
-            //             OrderName = "Order1",
-            //             CreatedAt = DateTimeOffset.Now,
-            //        }
-            //    },
-            //    new Order
-            //    {
-            //        Status = OrderStatus.Approved,
-            //        Content = new OrderContent
-            //        {
-            //             OrderName = "Order2",
-            //             CreatedAt = DateTimeOffset.Now,
-            //        }
-            //    }
-            //};
-
-            //var item1 = new OrderItem { ItemName = "name1", ItemQuantity = 2 };
-            //var item2 = new OrderItem { ItemName = "name2", ItemQuantity = 10 };
-
-            //orders[0].Content?.Items.Add(item1);
-            //orders[0].Content?.Items.Add(item2);
-
-            //_realm.Write(() =>
-            //{
-            //    _realm.Add(orders);
-            //});
-        }
+        _orders = _realm.All<Order>();
+        _requests = _realm.All<AtlasRequest>();
     }
 
     [RelayCommand]
-    public async Task AddOrder()
+    public async Task CreateOrderRequest()
     {
-        await Shell.Current.GoToAsync($"createModifyOrder");
+        var requestPayload = new CreateOrderPayload
+        {
+            Content = new OrderContent(),
+        };
+
+        var request = new AtlasRequest
+        {
+            Status = RequestStatus.Draft,
+            Payload = requestPayload,
+        };
+
+        _realm.Write(() =>
+        {
+            _realm.Add(request);
+        });
+
+        await GoToCreateOrderRequest(request);
+    }
+
+    [RelayCommand]
+    public async Task OpenRequest(AtlasRequest request)
+    {
+        //TODO Here I should differentiate between the requests
+        await GoToCreateOrderRequest(request);
+    }
+
+    [RelayCommand]
+    public async Task OpenOrder(Order order)
+    {
+        await GoToOrder(order);
     }
 
     [RelayCommand]
@@ -88,14 +81,22 @@ public partial class OrdersViewModel : BaseViewModel
         ConnectionStatusIcon = isOnline ? "wifi_on.png" : "wifi_off.png";
     }
 
-    [RelayCommand]
-    public async Task OpenOrder(Order Order)
+    public async Task GoToOrder(Order order)
     {
         var navigationParameter = new Dictionary<string, object>
         {
-            { "Order", Order },
+            { "Order", order },
         };
         await Shell.Current.GoToAsync($"order", navigationParameter);
+    }
+
+    private async Task GoToCreateOrderRequest(AtlasRequest request)
+    {
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "Request", request },
+        };
+        await Shell.Current.GoToAsync($"createModifyOrder", navigationParameter);
     }
 }
 

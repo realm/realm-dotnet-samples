@@ -6,35 +6,26 @@ using Realms;
 
 namespace ObjectsAsAPI.ViewModels;
 
-public partial class CreateModifyOrderViewModel : BaseViewModel
+[QueryProperty("Request", "Request")]
+public partial class CreateOrderViewModel : BaseViewModel
 {
     [ObservableProperty]
-    private OrderContent _orderContent;
+    private OrderContent _orderContent = null!;
 
-    private AtlasRequest _request;
+    [ObservableProperty]
+    private AtlasRequest _request = null!;
+
+    [ObservableProperty]
+    private bool _isDraft;
+
+    [ObservableProperty]
+    private bool _isNotDraft; //TODO Need to remove this
 
     private Realm _realm;
 
-    public CreateModifyOrderViewModel()
+    public CreateOrderViewModel()
     {
-        var requestPayload = new CreateOrderPayload
-        {
-            Content = new OrderContent(),
-        };
-
-        _request = new AtlasRequest
-        {
-            Status = RequestStatus.Draft,
-            Payload = requestPayload,
-        };
-
-        _orderContent = requestPayload.Content;
         _realm = RealmService.GetMainThreadRealm();
-
-        _realm.Write(() =>
-        {
-            _realm.Add(_request);
-        });
     }
 
     [RelayCommand]
@@ -60,7 +51,7 @@ public partial class CreateModifyOrderViewModel : BaseViewModel
     {
         _realm.Write(() =>
         {
-            _request.Status = RequestStatus.Pending;
+            Request.Status = RequestStatus.Pending;
         });
 
         await Close();
@@ -71,10 +62,22 @@ public partial class CreateModifyOrderViewModel : BaseViewModel
     {
         _realm.Write(() =>
         {
-            _realm.Remove(_request);
+            _realm.Remove(Request);
         });
 
         await Close();
+    }
+
+    partial void OnRequestChanged(AtlasRequest value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        OrderContent = value.Payload.As<CreateOrderPayload>().Content!;
+        IsDraft = value.Status == RequestStatus.Draft;
+        IsNotDraft = value.Status != RequestStatus.Draft;
     }
 
     private async Task Close()

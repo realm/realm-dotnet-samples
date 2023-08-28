@@ -55,9 +55,7 @@ public partial class OrderItem : IEmbeddedObject
 public enum OrderStatus
 {
     Approved,
-    Processing, // Could be removed
     Fulfilled,
     Cancelled,
-    Rejected,
 }
 
