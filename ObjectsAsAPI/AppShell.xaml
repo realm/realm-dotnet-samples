@@ -9,16 +9,12 @@
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
-        Route="LoginPage" />
+        Route="login" />
 
-    <TabBar Route="main">
-       <Tab Title="Orders">
-           <ShellContent ContentTemplate="{DataTemplate views:OrdersPage}" Route="orders" />
-       </Tab>
-       <Tab Title="Requests">
-           <ShellContent ContentTemplate="{DataTemplate views:RequestsPage}" Route="requests" />
-       </Tab>
-    </TabBar>
+    <ShellContent
+        Title="Main"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="main" />
 
 </Shell>
 

@@ -4,15 +4,15 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
              xmlns:utils="clr-namespace:ObjectsAsAPI.Utils"
-             x:Class="ObjectsAsAPI.Views.OrdersPage"
-             x:Name="ordersPage"
+             x:Class="ObjectsAsAPI.Views.MainPage"
+             x:Name="mainPage"
              Title="Orders">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
         <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding CreateOrderRequestCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
-        <vm:OrdersViewModel/>
+        <vm:MainViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Resources>
          <ResourceDictionary>
@@ -38,7 +38,7 @@
                         <ViewCell>
                             <ViewCell.ContextActions>
                                 <MenuItem Text="Delete" IsDestructive="True" 
-                                       Command="{Binding Path=BindingContext.DeleteOrderCommand, Source={x:Reference ordersPage}}" 
+                                       Command="{Binding Path=BindingContext.DeleteOrderCommand, Source={x:Reference mainPage}}" 
                                        CommandParameter="{Binding .}" />
                             </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"
@@ -93,7 +93,7 @@
                         <ViewCell>
                             <ViewCell.ContextActions>
                                 <MenuItem Text="Delete" IsDestructive="True" 
-                                       Command="{Binding Path=BindingContext.DeleteRequestCommand, Source={x:Reference ordersPage}}" 
+                                       Command="{Binding Path=BindingContext.DeleteRequestCommand, Source={x:Reference mainPage}}" 
                                        CommandParameter="{Binding .}" />
                             </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"

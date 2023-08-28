@@ -1,8 +1,8 @@
 ﻿namespace ObjectsAsAPI.Views;
 
-public partial class RequestsPage : ContentPage
+public partial class MainPage : ContentPage
 {
-    public RequestsPage()
+    public MainPage()
     {
         InitializeComponent();
     }

@@ -60,7 +60,7 @@ public partial class AtlasRequest : IRealmObject
                 }
             }
 
-            return $"{status}{requestType} - {orderName}";
+            return $"{status}{requestType}{(string.IsNullOrEmpty(orderName)? "" : "- {orderName}" )}";
         }
     }
 

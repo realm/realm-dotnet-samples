@@ -6,7 +6,7 @@ using Realms;
 
 namespace ObjectsAsAPI.ViewModels;
 
-public partial class OrdersViewModel : BaseViewModel
+public partial class MainViewModel : BaseViewModel
 {
     private bool isOnline = true;
 
@@ -21,7 +21,7 @@ public partial class OrdersViewModel : BaseViewModel
     [ObservableProperty]
     private string connectionStatusIcon = "wifi_on.png";
 
-    public OrdersViewModel()
+    public MainViewModel()
     {
         _realm = RealmService.GetMainThreadRealm();
 
