@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
              x:Class="ObjectsAsAPI.Views.CreateModifyOrderPage"
              Title="{Binding OrderContent.OrderName}"
-             x:Name="page">
+             x:Name="createOrderPage">
     <ContentPage.BindingContext>
         <vm:CreateOrderViewModel/>
     </ContentPage.BindingContext>
@@ -26,7 +26,7 @@
                                            HorizontalOptions="FillAndExpand"
                                            VerticalOptions="Center"/>
                                     <Button Text="X" FontSize="Medium"
-								        Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference page}}"
+								        Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference createOrderPage}}"
                                         CommandParameter="{Binding .}"/>
                                 </StackLayout>
                             </DataTemplate>

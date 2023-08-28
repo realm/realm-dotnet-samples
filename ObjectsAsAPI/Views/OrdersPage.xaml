@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
              xmlns:utils="clr-namespace:ObjectsAsAPI.Utils"
              x:Class="ObjectsAsAPI.Views.OrdersPage"
+             x:Name="ordersPage"
              Title="Orders">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
@@ -36,8 +37,8 @@
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.ContextActions>
-                                <MenuItem Text="Cancel" IsDestructive="false" 
-                                       Command="{Binding Path=BindingContext.CancelOrder, Source={x:Reference entriesPage}}" 
+                                <MenuItem Text="Delete" IsDestructive="True" 
+                                       Command="{Binding Path=BindingContext.DeleteOrderCommand, Source={x:Reference ordersPage}}" 
                                        CommandParameter="{Binding .}" />
                             </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"
@@ -90,12 +91,17 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Delete" IsDestructive="True" 
+                                       Command="{Binding Path=BindingContext.DeleteRequestCommand, Source={x:Reference ordersPage}}" 
+                                       CommandParameter="{Binding .}" />
+                            </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"
                                   ColumnDefinitions="2*, 1*"
                                   Padding="10"> 
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Id}"
+                                       Text="{Binding Description}"
                                        FontSize="Body"/>
                                 <Label Grid.Row="1" Grid.Column="0"
                                        VerticalTextAlignment="Center"

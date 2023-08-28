@@ -31,9 +31,42 @@ public partial class AtlasRequest : IRealmObject
     [MapTo("response")]
     public RealmValue Response { get; set; }
 
+    // Used in the UI
+    public string? Description
+    {
+        get
+        {
+            var payloadClass = Payload.AsIRealmObject().ObjectSchema?.Name;
+
+            string? status = null;
+            string? requestType = null;
+            string? orderName = null;
+
+            if (payloadClass == nameof(CreateOrderPayload))
+            {
+                requestType = "CreateOrder";
+                orderName = Payload.AsRealmObject<CreateOrderPayload>()?.Content?.OrderName;
+
+                if (Response != RealmValue.Null)
+                {
+                    var response = Response.AsRealmObject<CreateOrderResponse>();
+
+                    status = response.Status switch
+                    {
+                        ResponseStatus.Approved => "✅ ",
+                        ResponseStatus.Rejected => "❌ ",
+                        _ => throw new NotImplementedException(),
+                    };
+                }
+            }
+
+            return $"{status}{requestType} - {orderName}";
+        }
+    }
+
     public AtlasRequest()
     {
-        if (RealmService.CurrentUser == null)  //TODO This can go in a method
+        if (RealmService.CurrentUser == null)
         {
             throw new Exception("Login before using models!");
         }
@@ -44,11 +77,14 @@ public partial class AtlasRequest : IRealmObject
 
     partial void OnPropertyChanged(string? propertyName)
     {
+        //TODO Can we do something so that we raise a notification when the Payload changes?
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
+            RaisePropertyChanged(nameof(Description));
         }
     }
+
 }
 
 public enum RequestStatus
@@ -65,9 +101,6 @@ public interface IPayload
     public ObjectId Id { get; set; }
 }
 
-//TODO Removing the setter as responses should be read-only
-/// but adding the setter as private in the concrete class
-/// otherwise the property doesn't get picked up by trealm
 public interface IResponse
 {
     public string CreatorId { get; }
@@ -141,6 +174,7 @@ public partial class CreateOrderResponse : IRealmObject, IResponse
  * 
  * What I don't like about specific request class:
  *  - I'm not sure how to show them in the UI (we would need to separate them probably)
+ *  - If I use a trigger on modifications, it will be called all the time when creating the payload
  * 
  * 
  */

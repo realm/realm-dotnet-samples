@@ -8,25 +8,26 @@ namespace ObjectsAsAPI.ViewModels;
 
 public partial class OrdersViewModel : BaseViewModel
 {
+    private bool isOnline = true;
+
+    private Realm _realm;
+
     [ObservableProperty]
     private IEnumerable<Order> _orders;
 
     [ObservableProperty]
     private IEnumerable<AtlasRequest> _requests;
 
-    private bool isOnline = true;  //TODO Order variables
-
     [ObservableProperty]
     private string connectionStatusIcon = "wifi_on.png";
-
-    private Realm _realm;
 
     public OrdersViewModel()
     {
         _realm = RealmService.GetMainThreadRealm();
 
-        _orders = _realm.All<Order>();
-        _requests = _realm.All<AtlasRequest>();
+        // New objects will be on top
+        _orders = _realm.All<Order>().OrderByDescending( o => o.Content!.CreatedAt);
+        _requests = _realm.All<AtlasRequest>().OrderByDescending(r => r.CreatedAt);
     }
 
     [RelayCommand]
@@ -62,6 +63,24 @@ public partial class OrdersViewModel : BaseViewModel
     public async Task OpenOrder(Order order)
     {
         await GoToOrder(order);
+    }
+
+    [RelayCommand]
+    public void DeleteRequest(AtlasRequest request)
+    {
+        _realm.Write(() =>
+        {
+            _realm.Remove(request);
+        });
+    }
+
+    [RelayCommand]
+    public void DeleteOrder(Order order)
+    {
+        _realm.Write(() =>
+        {
+            _realm.Remove(order);
+        });
     }
 
     [RelayCommand]
