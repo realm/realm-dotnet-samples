@@ -8,7 +8,7 @@ namespace ObjectsAsAPI.Services;
 
 public static class RealmService
 {
-    private static readonly string _appId = "";
+    private static readonly string _appId = "application-0-wokzq";
 
     private static bool _serviceInitialised;
 
@@ -106,16 +106,12 @@ public static class RealmService
         {
             PopulateInitialSubscriptions = (realm) =>
             {
-                var myOrders = realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id);
-                var myRequests = realm.All<AtlasRequest>().Where(r => r.CreatorId == CurrentUser.Id);
-                var myCreateOrderPayload = realm.All<CreateOrderPayload>().Where(r => r.CreatorId == CurrentUser.Id);
-                var myCreateOrderResponse = realm.All<CreateOrderResponse>().Where(r => r.CreatorId == CurrentUser.Id);
-                //TODO Here we need the other kinds too
-
-                realm.Subscriptions.Add(myOrders);
-                realm.Subscriptions.Add(myRequests);
-                realm.Subscriptions.Add(myCreateOrderPayload);
-                realm.Subscriptions.Add(myCreateOrderResponse);
+                realm.Subscriptions.Add(realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<AtlasRequest>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<CreateOrderPayload>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<CreateOrderResponse>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<CancelOrderPayload>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<CancelOrderResponse>().Where(r => r.CreatorId == CurrentUser.Id));
             },
         };
 
