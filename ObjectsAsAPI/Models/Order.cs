@@ -3,7 +3,6 @@ using Realms;
 
 namespace ObjectsAsAPI.Models;
 
-//TODO Putting the setter as private to "simulate" readonly-ness
 public partial class Order : IRealmObject
 {
     [PrimaryKey]

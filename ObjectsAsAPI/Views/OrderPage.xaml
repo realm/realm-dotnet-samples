@@ -5,6 +5,9 @@
              xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
              xmlns:utils="clr-namespace:ObjectsAsAPI.Utils"
              Title="{Binding Order.Content.OrderName}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Cancel Order" Order="Primary" Command="{Binding CancelOrderCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <vm:OrderViewModel/>
     </ContentPage.BindingContext>

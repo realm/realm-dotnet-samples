@@ -9,7 +9,7 @@
              Title="Orders">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
-        <ToolbarItem Text="Add" IconImageSource="add.png" Order="Secondary" Command="{Binding CreateOrderRequestCommand}" />
+        <ToolbarItem Text="Create Order" IconImageSource="add.png" Order="Secondary" Command="{Binding CreateOrderRequestCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <vm:MainViewModel/>

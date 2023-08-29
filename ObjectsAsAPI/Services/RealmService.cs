@@ -121,10 +121,4 @@ public static class RealmService
 
         return config;
     }
-
-    private static void LogAndShowToast(string text)
-    {
-        Console.WriteLine(text);
-        MainThread.BeginInvokeOnMainThread(async () => await DialogService.ShowToast(text));
-    }
 }

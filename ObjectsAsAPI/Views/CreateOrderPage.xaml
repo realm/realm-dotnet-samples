@@ -10,8 +10,9 @@
         <vm:CreateOrderViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <Grid RowDefinitions="40, 4*, 1*">
+        <Grid RowDefinitions="Auto, 4*, 1*">
             <Label Text="{Binding Request.StatusString}"
+                   Padding="5"
                    FontSize="Large"
                    BackgroundColor="AliceBlue"
                    HorizontalTextAlignment="Center"
