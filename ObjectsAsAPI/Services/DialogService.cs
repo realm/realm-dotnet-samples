@@ -15,6 +15,11 @@ public static class DialogService
         return MainPage.DisplayAlert(title, message, accept);
     }
 
+    public static Task<bool> ShowYesNoAlertAsync(string title, string message)
+    {
+        return MainPage.DisplayAlert(title, message, "Yes", "No");
+    }
+
     public static Action ShowActivityIndicator()
     {
         var popup = new BusyPopup();

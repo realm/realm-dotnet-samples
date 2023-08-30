@@ -44,7 +44,7 @@ public partial class CreateOrderResponse : IRealmObject, IResponse
 
     public ResponseStatus Status
     {
-        get => Enum.Parse<ResponseStatus>(_Status);
+        get => string.IsNullOrEmpty(_Status) ? ResponseStatus.Approved : Enum.Parse<ResponseStatus>(_Status);
         private set => _Status = value.ToString();
     }
 

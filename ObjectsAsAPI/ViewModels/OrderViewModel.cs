@@ -23,13 +23,29 @@ public partial class OrderViewModel : BaseViewModel
 
         var request = new AtlasRequest
         {
-            Status = RequestStatus.Pending,
+            Status = RequestStatus.Draft,
             Payload = requestPayload,
         };
 
         realm.Write(() =>
         {
             realm.Add(request);
+        });
+
+        //TODO Is this the way we want to go?
+        var shouldCancel = await DialogService.ShowYesNoAlertAsync("Cancel order",
+            "Are you sure you want to cancel the current order?");
+
+        realm.Write(() =>
+        {
+            if (shouldCancel)
+            {
+                request.Status = RequestStatus.Pending;
+            }
+            else
+            {
+                realm.Remove(request);
+            }
         });
 
         await Shell.Current.GoToAsync("..");

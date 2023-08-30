@@ -40,27 +40,57 @@ public partial class AtlasRequest : IRealmObject
 
             string? status = null;
             string? requestType = null;
-            string? orderName = null;
+            string? orderIdentifier = null;
 
             if (payloadClass == nameof(CreateOrderPayload))
             {
                 requestType = "CreateOrder";
-                orderName = Payload.AsRealmObject<CreateOrderPayload>()?.Content?.OrderName;
-
-                if (Response != RealmValue.Null)
-                {
-                    var response = Response.AsRealmObject<CreateOrderResponse>();
-
-                    status = response.Status switch
-                    {
-                        ResponseStatus.Approved => "✅ ",
-                        ResponseStatus.Rejected => "❌ ",
-                        _ => throw new NotImplementedException(),
-                    };
-                }
+                orderIdentifier = Payload.AsRealmObject<CreateOrderPayload>()?.Content?.OrderName;
+            }
+            else if(payloadClass == nameof(CancelOrderPayload))
+            {
+                requestType = "CancelOrder";
+                orderIdentifier = Payload.AsRealmObject<CancelOrderPayload>()?.OrderId.ToString();
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
 
-            return $"{status}{requestType}{(string.IsNullOrEmpty(orderName)? "" : $" - {orderName}" )}";
+            if (orderIdentifier?.Length > 10)
+            {
+                orderIdentifier = orderIdentifier[..10];
+            }
+
+            if (Response != RealmValue.Null)
+            {
+                var response = Response.AsIRealmObject() as IResponse;
+
+                //TODO This was used to find the cause of the crashes, can be removed
+                //string? statusString = null;
+                //if (payloadClass == nameof(CreateOrderPayload))
+                //{
+                //    statusString = (response as CreateOrderResponse)!.GetPrivateStatus();
+                //}
+                //else if (payloadClass == nameof(CancelOrderPayload))
+                //{
+                //    statusString = (response as CancelOrderResponse)!.GetPrivateStatus();
+                //}
+
+                //if (string.IsNullOrEmpty(statusString))
+                //{
+                //    Console.WriteLine($"ALARM: {payloadClass} - Id={response?.Id} - Status={statusString}");
+                //}
+
+                status = response?.Status switch
+                {
+                    ResponseStatus.Approved => "✅ ",
+                    ResponseStatus.Rejected => "❌ ",
+                    _ => throw new NotImplementedException(),
+                };
+            }
+
+            return $"{status}{requestType}{(string.IsNullOrEmpty(orderIdentifier)? "" : $" - {orderIdentifier}" )}";
         }
     }
 
@@ -93,13 +123,13 @@ public partial class AtlasRequest : IRealmObject
 
     partial void OnPropertyChanged(string? propertyName)
     {
+
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
             RaisePropertyChanged(nameof(Description));
         }
     }
-
 }
 
 public enum RequestStatus
@@ -133,16 +163,3 @@ public enum ResponseStatus
     Approved,
     Rejected,
 }
-
-
-/* What I don't like about generic request class:
- *  - Payload/Response can't be embedded, so they need to have an ID and CreatorID
- *  - I have a feeling creating the actions will be more complex, because I need to create other objects and then set them
- * 
- * 
- * What I don't like about specific request class:
- *  - I'm not sure how to show them in the UI (we would need to separate them probably)
- *  - If I use a trigger on modifications, it will be called all the time when creating the payload
- * 
- * 
- */

@@ -23,6 +23,14 @@ public partial class Order : IRealmObject
         get => Enum.Parse<OrderStatus>(_Status);
         private set => _Status = value.ToString();
     }
+
+    partial void OnPropertyChanged(string? propertyName)
+    {
+        if (propertyName == nameof(_Status))
+        {
+            RaisePropertyChanged(nameof(Status));
+        }
+    }
 }
 
 public partial class OrderContent : IEmbeddedObject
@@ -57,4 +65,3 @@ public enum OrderStatus
     Fulfilled,
     Cancelled,
 }
-

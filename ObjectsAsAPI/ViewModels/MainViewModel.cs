@@ -13,10 +13,10 @@ public partial class MainViewModel : BaseViewModel
     private Realm _realm;
 
     [ObservableProperty]
-    private IEnumerable<Order> _orders;
+    private IQueryable<Order> _orders;
 
     [ObservableProperty]
-    private IEnumerable<AtlasRequest> _requests;
+    private IQueryable<AtlasRequest> _requests;
 
     [ObservableProperty]
     private string connectionStatusIcon = "wifi_on.png";
@@ -55,8 +55,10 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     public async Task OpenRequest(AtlasRequest request)
     {
-        //TODO Here I should differentiate between the requests
-        await GoToCreateOrderRequest(request);
+        if (request.Payload.AsIRealmObject().ObjectSchema?.Name == nameof(CreateOrderPayload))
+        {
+            await GoToCreateOrderRequest(request);
+        }
     }
 
     [RelayCommand]

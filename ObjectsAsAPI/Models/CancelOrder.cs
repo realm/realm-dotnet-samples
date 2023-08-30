@@ -44,7 +44,8 @@ public partial class CancelOrderResponse : IRealmObject, IResponse
 
     public ResponseStatus Status
     {
-        get => Enum.Parse<ResponseStatus>(_Status);
+        //TODO We need to decide if this is the way we want to go
+        get => string.IsNullOrEmpty(_Status)? ResponseStatus.Approved : Enum.Parse<ResponseStatus>(_Status);
         private set => _Status = value.ToString();
     }
 
