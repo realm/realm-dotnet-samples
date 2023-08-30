@@ -8,7 +8,7 @@ namespace ObjectsAsAPI.Services;
 
 public static class RealmService
 {
-    private static readonly string _appId = "application-0-wokzq";
+    private static readonly string _appId = "";
 
     private static bool _serviceInitialised;
 
