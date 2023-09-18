@@ -66,22 +66,6 @@ public partial class AtlasRequest : IRealmObject
             {
                 var response = Response.AsIRealmObject() as IResponse;
 
-                //TODO This was used to find the cause of the crashes, can be removed
-                //string? statusString = null;
-                //if (payloadClass == nameof(CreateOrderPayload))
-                //{
-                //    statusString = (response as CreateOrderResponse)!.GetPrivateStatus();
-                //}
-                //else if (payloadClass == nameof(CancelOrderPayload))
-                //{
-                //    statusString = (response as CancelOrderResponse)!.GetPrivateStatus();
-                //}
-
-                //if (string.IsNullOrEmpty(statusString))
-                //{
-                //    Console.WriteLine($"ALARM: {payloadClass} - Id={response?.Id} - Status={statusString}");
-                //}
-
                 status = response?.Status switch
                 {
                     ResponseStatus.Approved => "✅ ",
