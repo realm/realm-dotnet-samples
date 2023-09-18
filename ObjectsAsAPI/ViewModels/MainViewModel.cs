@@ -16,7 +16,10 @@ public partial class MainViewModel : BaseViewModel
     private IQueryable<Order> _orders;
 
     [ObservableProperty]
-    private List<IQueryable<IRealmObject>> _requests;
+    private IQueryable<CreateOrderRequest> _createOrderRequests;
+
+    [ObservableProperty]
+    private IQueryable<CancelOrderRequest> _cancelOrderRequests;
 
     [ObservableProperty]
     private string connectionStatusIcon = "wifi_on.png";
@@ -27,18 +30,12 @@ public partial class MainViewModel : BaseViewModel
 
         // New objects will be on top
         _orders = _realm.All<Order>().OrderByDescending( o => o.Content!.CreatedAt);
-        var createOrderRequests = _realm.All<CreateOrderRequest>().OrderByDescending(r => r.CreatedAt);
-        var cancelOrderRequests = _realm.All<CancelOrderRequest>().OrderByDescending(r => r.CreatedAt);
-
-        _requests = new List<IQueryable<IRealmObject>>
-        {
-            createOrderRequests,
-            cancelOrderRequests
-        };
+        _createOrderRequests = _realm.All<CreateOrderRequest>().OrderByDescending(r => r.CreatedAt);
+        _cancelOrderRequests = _realm.All<CancelOrderRequest>().OrderByDescending(r => r.CreatedAt);
     }
 
     [RelayCommand]
-    public async Task CreateOrderRequest()
+    public async Task AddCreateOrderRequest()
     {
         var requestPayload = new CreateOrderPayload
         {
@@ -75,11 +72,15 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public async Task OpeRequest(IRealmObject request)
+    public async Task OpenRequest(IRealmObject request)
     {
-        if (request?.ObjectSchema?.Name == nameof(CreateOrderRequest))
+        if (request is CreateOrderRequest crr)
         {
-            await GoToCreateOrderRequest((CreateOrderRequest)request);
+            await GoToCreateOrderRequest(crr);
+        }
+        else if (request is CancelOrderRequest cor)
+        {
+            await GoToCancelOrderRequest(cor);
         }
     }
 
@@ -124,7 +125,16 @@ public partial class MainViewModel : BaseViewModel
         {
             { "Request", request },
         };
-        await Shell.Current.GoToAsync($"createModifyOrder", navigationParameter);
+        await Shell.Current.GoToAsync($"createOrder", navigationParameter);
+    }
+
+    private async Task GoToCancelOrderRequest(CancelOrderRequest request)
+    {
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "Request", request },
+        };
+        await Shell.Current.GoToAsync($"cancelOrder", navigationParameter);
     }
 }
 

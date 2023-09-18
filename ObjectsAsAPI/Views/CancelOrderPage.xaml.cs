@@ -1,8 +1,8 @@
 ﻿namespace ObjectsAsAPI.Views;
 
-public partial class CreateOrderPage : ContentPage
+public partial class CancelOrderPage : ContentPage
 {
-    public CreateOrderPage()
+    public CancelOrderPage()
     {
         InitializeComponent();
     }
