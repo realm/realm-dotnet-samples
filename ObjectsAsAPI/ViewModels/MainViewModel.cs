@@ -16,7 +16,7 @@ public partial class MainViewModel : BaseViewModel
     private IQueryable<Order> _orders;
 
     [ObservableProperty]
-    private IQueryable<AtlasRequest> _requests;
+    private List<IQueryable<IRealmObject>> _requests;
 
     [ObservableProperty]
     private string connectionStatusIcon = "wifi_on.png";
@@ -27,7 +27,14 @@ public partial class MainViewModel : BaseViewModel
 
         // New objects will be on top
         _orders = _realm.All<Order>().OrderByDescending( o => o.Content!.CreatedAt);
-        _requests = _realm.All<AtlasRequest>().OrderByDescending(r => r.CreatedAt);
+        var createOrderRequests = _realm.All<CreateOrderRequest>().OrderByDescending(r => r.CreatedAt);
+        var cancelOrderRequests = _realm.All<CancelOrderRequest>().OrderByDescending(r => r.CreatedAt);
+
+        _requests = new List<IQueryable<IRealmObject>>
+        {
+            createOrderRequests,
+            cancelOrderRequests
+        };
     }
 
     [RelayCommand]
@@ -38,7 +45,7 @@ public partial class MainViewModel : BaseViewModel
             Content = new OrderContent(),
         };
 
-        var request = new AtlasRequest
+        var request = new CreateOrderRequest
         {
             Status = RequestStatus.Draft,
             Payload = requestPayload,
@@ -53,27 +60,9 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public async Task OpenRequest(AtlasRequest request)
-    {
-        if (request.Payload.AsIRealmObject().ObjectSchema?.Name == nameof(CreateOrderPayload))
-        {
-            await GoToCreateOrderRequest(request);
-        }
-    }
-
-    [RelayCommand]
     public async Task OpenOrder(Order order)
     {
         await GoToOrder(order);
-    }
-
-    [RelayCommand]
-    public void DeleteRequest(AtlasRequest request)
-    {
-        _realm.Write(() =>
-        {
-            _realm.Remove(request);
-        });
     }
 
     [RelayCommand]
@@ -82,6 +71,24 @@ public partial class MainViewModel : BaseViewModel
         _realm.Write(() =>
         {
             _realm.Remove(order);
+        });
+    }
+
+    [RelayCommand]
+    public async Task OpeRequest(IRealmObject request)
+    {
+        if (request?.ObjectSchema?.Name == nameof(CreateOrderRequest))
+        {
+            await GoToCreateOrderRequest((CreateOrderRequest)request);
+        }
+    }
+
+    [RelayCommand]
+    public void DeleteRequest(IRealmObject request)
+    {
+        _realm.Write(() =>
+        {
+            _realm.Remove(request);
         });
     }
 
@@ -111,7 +118,7 @@ public partial class MainViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"order", navigationParameter);
     }
 
-    private async Task GoToCreateOrderRequest(AtlasRequest request)
+    private async Task GoToCreateOrderRequest(CreateOrderRequest request)
     {
         var navigationParameter = new Dictionary<string, object>
         {

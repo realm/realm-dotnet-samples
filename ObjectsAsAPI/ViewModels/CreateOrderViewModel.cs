@@ -13,7 +13,7 @@ public partial class CreateOrderViewModel : BaseViewModel
     private OrderContent _orderContent = null!;
 
     [ObservableProperty]
-    private AtlasRequest _request = null!;
+    private CreateOrderRequest _request = null!;
 
     [ObservableProperty]
     private bool _isDraft;
@@ -68,14 +68,14 @@ public partial class CreateOrderViewModel : BaseViewModel
         await Close();
     }
 
-    partial void OnRequestChanged(AtlasRequest value)
+    partial void OnRequestChanged(CreateOrderRequest value)
     {
         if (value == null)
         {
             return;
         }
 
-        OrderContent = value.Payload.As<CreateOrderPayload>().Content!;
+        OrderContent = value.Payload?.Content!;
         IsDraft = value.Status == RequestStatus.Draft;
         IsNotDraft = value.Status != RequestStatus.Draft;
     }

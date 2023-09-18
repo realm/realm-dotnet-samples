@@ -107,11 +107,8 @@ public static class RealmService
             PopulateInitialSubscriptions = (realm) =>
             {
                 realm.Subscriptions.Add(realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id));
-                realm.Subscriptions.Add(realm.All<AtlasRequest>().Where(r => r.CreatorId == CurrentUser.Id));
-                realm.Subscriptions.Add(realm.All<CreateOrderPayload>().Where(r => r.CreatorId == CurrentUser.Id));
-                realm.Subscriptions.Add(realm.All<CreateOrderResponse>().Where(r => r.CreatorId == CurrentUser.Id));
-                realm.Subscriptions.Add(realm.All<CancelOrderPayload>().Where(r => r.CreatorId == CurrentUser.Id));
-                realm.Subscriptions.Add(realm.All<CancelOrderResponse>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<CreateOrderRequest>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<CancelOrderRequest>().Where(r => r.CreatorId == CurrentUser.Id));
             },
         };
 

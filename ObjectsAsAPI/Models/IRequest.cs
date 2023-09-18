@@ -12,6 +12,8 @@ public interface IRequest<P, R>
 
     public RequestStatus Status { get; set; }
 
+    public DateTimeOffset CreatedAt { get; set; }
+
     public P? Payload { get; set; }
 
     public R? Response { get; set; }

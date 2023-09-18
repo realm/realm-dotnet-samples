@@ -14,38 +14,28 @@ public partial class OrderViewModel : BaseViewModel
     [RelayCommand]
     public async Task CancelOrder()
     {
+        var shouldCancel = await DialogService.ShowYesNoAlertAsync("Cancel order",
+            "Are you sure you want to cancel the current order?");
+
+        if (!shouldCancel)
+        {
+            return;
+        }
+
         var realm = RealmService.GetMainThreadRealm();
 
-        var requestPayload = new CancelOrderPayload
+        var request = new CancelOrderRequest
         {
-            OrderId = Order.Id,
-        };
-
-        var request = new AtlasRequest
-        {
-            Status = RequestStatus.Draft,
-            Payload = requestPayload,
+            Status = RequestStatus.Pending,
+            Payload = new CancelOrderPayload
+            {
+                OrderId = Order.Id,
+            },
         };
 
         realm.Write(() =>
         {
             realm.Add(request);
-        });
-
-        //TODO Is this the way we want to go?
-        var shouldCancel = await DialogService.ShowYesNoAlertAsync("Cancel order",
-            "Are you sure you want to cancel the current order?");
-
-        realm.Write(() =>
-        {
-            if (shouldCancel)
-            {
-                request.Status = RequestStatus.Pending;
-            }
-            else
-            {
-                realm.Remove(request);
-            }
         });
 
         await Shell.Current.GoToAsync("..");

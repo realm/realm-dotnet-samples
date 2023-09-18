@@ -15,11 +15,11 @@
         <vm:MainViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-         <ResourceDictionary>
-             <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
-             <utils:EnumToColorConverter x:Key="enumToColorConverter"/>
-             <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
-         </ResourceDictionary>
+        <ResourceDictionary>
+            <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
+            <utils:EnumToColorConverter x:Key="enumToColorConverter"/>
+            <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+        </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid RowDefinitions="2*, 60, 2*">
@@ -43,7 +43,7 @@
                             </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"
                                   ColumnDefinitions="2*, 1*"
-                                  Padding="10"> 
+                                  Padding="10">
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding Content.OrderName}"
@@ -79,6 +79,7 @@
                             VerticalOptions="Center"/>
             </StackLayout>
             <ListView ItemsSource="{Binding Requests}"
+                      IsGroupingEnabled="True"
                   SelectionMode="None"
                   HasUnevenRows="True"
                   Grid.Row="2">
@@ -88,6 +89,21 @@
                         EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
                         Command="{Binding OpenRequestCommand}"/>
                 </ListView.Behaviors>
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Label Text="{Binding ElementType}"
+                                           BackgroundColor="LightGray"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           VerticalTextAlignment="Center"
+                                           HorizontalTextAlignment="Center"
+                                           />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -98,7 +114,7 @@
                             </ViewCell.ContextActions>
                             <Grid RowDefinitions="*, 1*"
                                   ColumnDefinitions="2*, 1*"
-                                  Padding="10"> 
+                                  Padding="10">
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding Description}"
