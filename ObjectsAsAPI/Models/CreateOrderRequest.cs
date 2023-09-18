@@ -4,31 +4,7 @@ using Realms;
 
 namespace ObjectsAsAPI.Models;
 
-public partial class CancelOrderPayload : IEmbeddedObject, IPayload
-{
-    [MapTo("orderId")]
-    public ObjectId OrderId { get; set; }
-}
-
-public partial class CancelOrderResponse : IEmbeddedObject, IResponse
-{
-    [MapTo("orderId")]
-    public ObjectId OrderId { get; set; }
-
-    [MapTo("status")]
-    private string _Status { get; set; } = null!;
-
-    public ResponseStatus Status
-    {
-        get => Enum.Parse<ResponseStatus>(_Status);
-        private set => _Status = value.ToString();
-    }
-
-    [MapTo("rejectedReason")]
-    public string? RejectedReason { get; private set; }
-}
-
-public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayload, CancelOrderResponse>
+public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayload, CreateOrderResponse>
 {
     [PrimaryKey]
     [MapTo("_id")]
@@ -50,11 +26,10 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
     public DateTimeOffset CreatedAt { get; set; }
 
     [MapTo("payload")]
-    public CancelOrderPayload? Payload { get; set; }
+    public CreateOrderPayload? Payload { get; set; }
 
     [MapTo("response")]
-    public CancelOrderResponse? Response { get; set; }
-
+    public CreateOrderResponse? Response { get; set; }
 
     // Used in the UI
     public string? Description
@@ -64,8 +39,8 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
             //TODO Check if all correct
             string? status = null;
 
-            var requestType = "CancelOrder";
-            var orderIdentifier = Payload?.OrderId.ToString();
+            var requestType = "CreateOrder";
+            var orderIdentifier = Payload?.Content?.OrderName;
 
             if (orderIdentifier?.Length > 10)
             {
@@ -102,7 +77,7 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
         }
     }
 
-    public CancelOrderRequest()
+    public CreateOrderRequest()
     {
         if (RealmService.CurrentUser == null)
         {
@@ -123,3 +98,28 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
         }
     }
 }
+
+public partial class CreateOrderPayload : IEmbeddedObject, IPayload
+{
+    [MapTo("content")]
+    public OrderContent? Content { get; set; }
+}
+
+public partial class CreateOrderResponse : IEmbeddedObject, IResponse
+{
+    [MapTo("order")]
+    public Order? Order { get; private set; }
+
+    [MapTo("status")]
+    private string _Status { get; set; } = null!;
+
+    public ResponseStatus Status
+    {
+        get => Enum.Parse<ResponseStatus>(_Status);
+        private set => _Status = value.ToString();
+    }
+
+    [MapTo("rejectedReason")]
+    public string? RejectedReason { get; private set; }
+}
+
