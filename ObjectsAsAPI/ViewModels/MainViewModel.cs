@@ -28,7 +28,7 @@ public partial class MainViewModel : BaseViewModel
     {
         _realm = RealmService.GetMainThreadRealm();
 
-        // New objects will be on top
+        // New objects will be at the top of the lists
         _orders = _realm.All<Order>().OrderByDescending( o => o.Content!.CreatedAt);
         _createOrderRequests = _realm.All<CreateOrderRequest>().OrderByDescending(r => r.CreatedAt);
         _cancelOrderRequests = _realm.All<CancelOrderRequest>().OrderByDescending(r => r.CreatedAt);
@@ -110,7 +110,18 @@ public partial class MainViewModel : BaseViewModel
         ConnectionStatusIcon = isOnline ? "wifi_on.png" : "wifi_off.png";
     }
 
-    public async Task GoToOrder(Order order)
+    [RelayCommand]
+    public async Task Logout()
+    {
+        IsBusy = true;
+        await RealmService.LogoutAsync();
+        IsBusy = false;
+
+        // This is the simplest way to avoid reusing pages after logout
+        Application.Current!.MainPage = new AppShell();
+    }
+
+    private async Task GoToOrder(Order order)
     {
         var navigationParameter = new Dictionary<string, object>
         {

@@ -31,13 +31,11 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
     [MapTo("response")]
     public CancelOrderResponse? Response { get; set; }
 
-
     // Used in the UI
     public string? Description
     {
         get
         {
-            //TODO Check if all correct
             string? status = null;
 
             var requestType = "CancelOrder";
@@ -67,7 +65,6 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
     {
         get
         {
-            //TODO CHeck if needed
             return Status switch
             {
                 RequestStatus.Draft => "Draft",
@@ -91,10 +88,10 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
 
     partial void OnPropertyChanged(string? propertyName)
     {
-        //TODO Check if needed
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
+            RaisePropertyChanged(nameof(StatusString));
             RaisePropertyChanged(nameof(Description));
         }
     }

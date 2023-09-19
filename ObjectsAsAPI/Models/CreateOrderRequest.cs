@@ -36,7 +36,6 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
     {
         get
         {
-            //TODO Check if all correct
             string? status = null;
 
             var requestType = "CreateOrder";
@@ -66,7 +65,6 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
     {
         get
         {
-            //TODO CHeck if needed
             return Status switch
             {
                 RequestStatus.Draft => "Draft",
@@ -90,10 +88,10 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
 
     partial void OnPropertyChanged(string? propertyName)
     {
-        //TODO Check if needed
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
+            RaisePropertyChanged(nameof(StatusString));
             RaisePropertyChanged(nameof(Description));
         }
     }

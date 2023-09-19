@@ -18,9 +18,6 @@ public partial class CreateOrderViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isDraft;
 
-    [ObservableProperty]
-    private bool _isNotDraft; //TODO Need to remove this
-
     private Realm _realm;
 
     public CreateOrderViewModel()
@@ -77,7 +74,6 @@ public partial class CreateOrderViewModel : BaseViewModel
 
         OrderContent = value.Payload?.Content!;
         IsDraft = value.Status == RequestStatus.Draft;
-        IsNotDraft = value.Status != RequestStatus.Draft;
     }
 
     private async Task Close()
