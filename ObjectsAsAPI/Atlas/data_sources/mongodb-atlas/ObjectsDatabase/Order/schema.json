@@ -1,0 +1,53 @@
+{
+    "properties": {
+        "_creatorId": {
+            "bsonType": "string"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "content": {
+            "properties": {
+                "createdAt": {
+                    "bsonType": "date"
+                },
+                "items": {
+                    "bsonType": "array",
+                    "items": {
+                        "properties": {
+                            "itemName": {
+                                "bsonType": "string"
+                            },
+                            "itemQuantity": {
+                                "bsonType": "long"
+                            }
+                        },
+                        "required": [
+                            "itemQuantity"
+                        ],
+                        "title": "OrderItem",
+                        "type": "object"
+                    }
+                },
+                "orderName": {
+                    "bsonType": "string"
+                }
+            },
+            "required": [
+                "createdAt"
+            ],
+            "title": "OrderContent",
+            "type": "object"
+        },
+        "status": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_creatorId",
+        "_id",
+        "status"
+    ],
+    "title": "Order",
+    "type": "object"
+}

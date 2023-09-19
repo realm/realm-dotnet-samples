@@ -1,0 +1,55 @@
+{
+    "properties": {
+        "_creatorId": {
+            "bsonType": "string"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "createdAt": {
+            "bsonType": "date"
+        },
+        "payload": {
+            "properties": {
+                "orderId": {
+                    "bsonType": "objectId"
+                }
+            },
+            "required": [
+                "orderId"
+            ],
+            "title": "CancelOrderPayload",
+            "type": "object"
+        },
+        "response": {
+            "properties": {
+                "orderId": {
+                    "bsonType": "objectId"
+                },
+                "rejectedReason": {
+                    "bsonType": "string"
+                },
+                "status": {
+                    "bsonType": "string"
+                }
+            },
+            "required": [
+                "orderId",
+                "status"
+            ],
+            "title": "CancelOrderResponse",
+            "type": "object"
+        },
+        "status": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_creatorId",
+        "_id",
+        "createdAt",
+        "status"
+    ],
+    "title": "CancelOrderRequest",
+    "type": "object"
+}

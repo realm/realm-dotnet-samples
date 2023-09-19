@@ -1,0 +1,82 @@
+{
+    "properties": {
+        "_creatorId": {
+            "bsonType": "string"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "createdAt": {
+            "bsonType": "date"
+        },
+        "payload": {
+            "properties": {
+                "content": {
+                    "properties": {
+                        "createdAt": {
+                            "bsonType": "date"
+                        },
+                        "items": {
+                            "bsonType": "array",
+                            "items": {
+                                "properties": {
+                                    "itemName": {
+                                        "bsonType": "string"
+                                    },
+                                    "itemQuantity": {
+                                        "bsonType": "long"
+                                    }
+                                },
+                                "required": [
+                                    "itemQuantity"
+                                ],
+                                "title": "OrderItem",
+                                "type": "object"
+                            }
+                        },
+                        "orderName": {
+                            "bsonType": "string"
+                        }
+                    },
+                    "required": [
+                        "createdAt"
+                    ],
+                    "title": "OrderContent",
+                    "type": "object"
+                }
+            },
+            "required": [],
+            "title": "CreateOrderPayload",
+            "type": "object"
+        },
+        "response": {
+            "properties": {
+                "order": {
+                    "bsonType": "objectId"
+                },
+                "rejectedReason": {
+                    "bsonType": "string"
+                },
+                "status": {
+                    "bsonType": "string"
+                }
+            },
+            "required": [
+                "status"
+            ],
+            "title": "CreateOrderResponse",
+            "type": "object"
+        },
+        "status": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_creatorId",
+        "_id",
+        "createdAt",
+        "status"
+    ],
+    "title": "CreateOrderRequest",
+    "type": "object"
+}
