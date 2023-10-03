@@ -8,13 +8,13 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
 {
     [PrimaryKey]
     [MapTo("_id")]
-    public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+    public ObjectId Id { get; private set; } = ObjectId.GenerateNewId();
 
     [MapTo("_creatorId")]
-    public string CreatorId { get; set; }
+    public string CreatorId { get; private set; }
 
     [MapTo("status")]
-    private string _Status { get; set; } = null!;
+    private string _Status { get; set; } = RequestStatus.Draft.ToString();
 
     public RequestStatus Status
     {
@@ -23,7 +23,7 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
     }
 
     [MapTo("createdAt")]
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     [MapTo("payload")]
     public CreateOrderPayload? Payload { get; set; }
@@ -109,7 +109,7 @@ public partial class CreateOrderResponse : IEmbeddedObject, IResponse
     public Order? Order { get; private set; }
 
     [MapTo("status")]
-    private string _Status { get; set; } = null!;
+    private string _Status { get; set; } = ResponseStatus.Approved.ToString();
 
     public ResponseStatus Status
     {

@@ -6,13 +6,13 @@ public interface IRequest<P, R>
     where P: IPayload
     where R: IResponse
 {
-    public ObjectId Id { get; set; }
+    public ObjectId Id { get; }
 
-    public string CreatorId { get; set; }
+    public string CreatorId { get; }
+
+    public DateTimeOffset CreatedAt { get; }
 
     public RequestStatus Status { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
 
     public P? Payload { get; set; }
 
