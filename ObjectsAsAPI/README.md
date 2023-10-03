@@ -2,7 +2,7 @@
 
 **ObjectsAsAPI** is a sample MAUI application that shows how to it is possible to use the insertion or update of Realm objects as a way to simulate a backend API call once the objects are synchronized on Atlas. In practice, this example shows how is it possible to create specific Realm objects representing API calls (**objects-as-api**), and how it is possible to use [Database Triggers]((https://www.mongodb.com/docs/atlas/app-services/triggers/database-triggers/#create-a-database-trigger)) to handle such calls. 
 
-For this example application, let us imagine the use case of a repairman that works on ships, where it cannot be guaranteed a stable internet connection. The repairman needs to create orders of all the pieces he needs for his repairs as he goes through the ship. In a later section we will take a look at how the app is structured to handle API calls all within Realm and Atlas Device Sync.
+For this example application, let us imagine the use case of a technician who works on ships, where a stable internet connection cannot be guaranteed. They need to create orders for all the pieces they need for the repairs as they go through the ship. In a later section we will take a look at how the app is structured to handle API calls all within Realm and Atlas Device Sync.
 
 ## Prerequisites
 
