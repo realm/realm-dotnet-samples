@@ -29,7 +29,7 @@ exports = async function(changeEvent) {
       response = {
         "status": "Rejected",
         "orderId": orderId,
-        "rejectedReason": "There too few items in this order to be cancelled!"
+        "rejectedReason": "There are too few items in this order to be cancelled!"
       }
     } else {
       const update = { 

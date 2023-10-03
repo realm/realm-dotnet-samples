@@ -61,14 +61,14 @@ To configure the app manually you will need to:
     <img src="Images/app.jpeg">
 </p>
 
-The application allows the user to create orders, containing an arbitrary number of items, and possibly cancel them. The main screen of the app (shown in the screenshot) contains the list of the orders on the top part of the screen, while at the bottom it shows the *API Requests* that are used to create or cancel order. The page contains also a button that allows to stop and resume synchronization, to simulate the lack of internet connection.
+The application allows the user to create orders, containing an arbitrary number of items, and possibly cancel them. The main screen of the app (shown in the screenshot) contains the list of the orders on the top part of the screen, while at the bottom it shows the *API Requests* that are used to create or cancel an order. The page contains also a button that allows you to stop and resume synchronization, to simulate the lack of internet connection.
 
-Clicking on the "+" button allows to create a new order, while clicking on an order will show its state, and allows to cancel it. Clicking on a request, instead, allows to see its state, and eventually cancel the request itself. For simplicity, it's also possible to swipe on all objects and delete them.
+Clicking on the "+" button allows you to create a new order, while clicking on an order will show its state, and allows to cancel it. Clicking on a request, instead, allows to see its state, and eventually cancel the request itself. For simplicity, it's also possible to swipe on all objects and delete them.
 
 ## The API
 
 In this application we want to show how the synchronization of Realm objects can be treated as an API call when combined with Database Triggers.
-For this, we have created `Request` objects, that represents the equivalent of an API call. 
+For this, we have created `Request` objects, that represent the equivalent of an API call. 
 
 To create a uniform shape for all the request objects, we have created the common interface `IRequest`:
 
@@ -180,7 +180,7 @@ public partial class CreateOrderResponse : IEmbeddedObject, IResponse
 }
 ```
 
-There a couple of things to notice here:
+There are a couple of things to notice here:
 - Both the `Payload` and `Response` are two embedded objects that are specific to this request.
 - `CreateOrderPayload` contains the content of the order the client would like to create.
 - `CreateOrderResponse` contains the backend answer to the request. If the request has been approved (`Status == Approved`), then a new `Order` will be created, otherwise (`Status == Rejected`) there will be the reason in `RejectedReason`.
