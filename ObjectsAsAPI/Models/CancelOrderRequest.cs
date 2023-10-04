@@ -4,7 +4,7 @@ using Realms;
 
 namespace ObjectsAsAPI.Models;
 
-public partial class CancelOrderRequest : IRealmObject
+public partial class CancelOrderRequest : IRealmObject, IRequest
 {
     [PrimaryKey]
     [MapTo("_id")]
@@ -55,23 +55,6 @@ public partial class CancelOrderRequest : IRealmObject
         }
     }
 
-    // Used in the UI
-    // Used in the UI
-    public string? StatusString
-    {
-        get
-        {
-            return Status switch
-            {
-                RequestStatus.Draft => "Draft",
-                RequestStatus.Pending => "Pending",
-                RequestStatus.Approved => "Approved",
-                RequestStatus.Rejected => $"Rejected{(string.IsNullOrEmpty(RejectedReason) ? "" : $": \"{RejectedReason}\"")}",
-                _ => throw new NotImplementedException(),
-            };
-        }
-    }
-
     public CancelOrderRequest()
     {
         if (RealmService.CurrentUser == null)
@@ -88,7 +71,6 @@ public partial class CancelOrderRequest : IRealmObject
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
-            RaisePropertyChanged(nameof(StatusString));
             RaisePropertyChanged(nameof(Description));
         }
     }
