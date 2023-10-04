@@ -12,6 +12,7 @@ public interface IRequest
 
     public RequestStatus Status { get; set; }
 
+    // Filled if Status == Rejected
     public string? RejectedReason { get; }
 }
 

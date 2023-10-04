@@ -73,30 +73,15 @@ For this, we have created `Request` objects, that represent the equivalent of an
 To create a uniform shape for all the request objects, we have created the common interface `IRequest`:
 
 ```csharp
-public interface IRequest<P, R>
-    where P: IPayload
-    where R: IResponse
+public interface IRequest
 {
-    public ObjectId Id { get; set; }
+    public ObjectId Id { get; }
 
-    public string CreatorId { get; set; }
+    public string CreatorId { get; }
+
+    public DateTimeOffset CreatedAt { get; }
 
     public RequestStatus Status { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-
-    public P? Payload { get; set; }
-
-    public R? Response { get; set; }
-}
-
-public interface IPayload
-{
-}
-
-public interface IResponse
-{
-    public ResponseStatus Status { get; }
 
     // Filled if Status == Rejected
     public string? RejectedReason { get; }
@@ -106,38 +91,29 @@ public enum RequestStatus
 {
     Draft, // The user is still editing, it shouldn't be handled
     Pending, // User confirmed, waiting for backend
-    Handled, // Response created
-}
-
-public enum ResponseStatus
-{
-    Approved,
-    Rejected,
+    Approved, // Request handled, approved
+    Rejected, // Request handled, rejected
 }
 ```
 
-The request objects have 3 main fields:
-- `Payload`, representing the body of the request;
-- `Response`, representing the response to the request, created by the backend after handling. The response has a `Status` property, that indicates if the request has been approved or rejected, and eventually the reason.
-- `Status`, indicating the status of the request: "Draft" is used when the request is still being edited on the client side; "Pending" is used when the request is ready for the backend to be picked up; "Handled" is set by the backend after the request has been handled and the response has been filled. 
+The interface contains fields that should be common to all requests, among which `Status`. This field indicates the status of the request: "Draft" is used when the request is still being edited on the client side; "Pending" is used when the request is ready for the backend to be picked up; "Approved" and "Rejected" are set by the backend after the request has been handled.
 
 The main idea here is that once a request is added or modified, then a trigger on the backend can be run in order to simulate an API call and implement the correspondent business logic. For this simple application there are two requests that have been implemented, `CreateOrderRequest` and `CancelOrderRequest`, respectively to create and cancel an order.
 
 Let us take a look a how `CreateOrderRequest` looks like and how it is handled, as an example. First of all, the model:
 
 ```csharp
-public partial class CreateOrderRequest 
-    : IRealmObject, IRequest<CreateOrderPayload, CreateOrderResponse>
+public partial class CreateOrderRequest : IRealmObject, IRequest
 {
     [PrimaryKey]
     [MapTo("_id")]
-    public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+    public ObjectId Id { get; private set; } = ObjectId.GenerateNewId();
 
     [MapTo("_creatorId")]
-    public string CreatorId { get; set; }
+    public string CreatorId { get; private set; }
 
     [MapTo("status")]
-    private string _Status { get; set; } = null!;
+    private string _Status { get; set; } = RequestStatus.Draft.ToString();
 
     public RequestStatus Status
     {
@@ -146,49 +122,37 @@ public partial class CreateOrderRequest
     }
 
     [MapTo("createdAt")]
-    public DateTimeOffset CreatedAt { get; set; }
-
-    [MapTo("payload")]
-    public CreateOrderPayload? Payload { get; set; }
-
-    [MapTo("response")]
-    public CreateOrderResponse? Response { get; set; }
-}
-
-public partial class CreateOrderPayload : IEmbeddedObject, IPayload
-{
-    [MapTo("content")]
-    public OrderContent? Content { get; set; }
-}
-
-public partial class CreateOrderResponse : IEmbeddedObject, IResponse
-{
-    [MapTo("order")]
-    public Order? Order { get; private set; }
-
-    [MapTo("status")]
-    private string _Status { get; set; } = null!;
-
-    public ResponseStatus Status
-    {
-        get => Enum.Parse<ResponseStatus>(_Status);
-        private set => _Status = value.ToString();
-    }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     [MapTo("rejectedReason")]
     public string? RejectedReason { get; private set; }
+
+    [MapTo("content")]
+    public OrderContent? Content { get; set; }
+
+    [MapTo("order")]
+    public Order? Order { get; private set; }
+
+    public CreateOrderRequest()
+    {
+        if (RealmService.CurrentUser == null)
+        {
+            throw new Exception("Login before using models!");
+        }
+
+        CreatorId = RealmService.CurrentUser.Id;
+        CreatedAt = DateTimeOffset.Now;
+    }
 }
 ```
 
 There are a couple of things to notice here:
-- Both the `Payload` and `Response` are two embedded objects that are specific to this request.
-- `CreateOrderPayload` contains the content of the order the client would like to create.
-- `CreateOrderResponse` contains the backend answer to the request. If the request has been approved (`Status == Approved`), then a new `Order` will be created, otherwise (`Status == Rejected`) there will be the reason in `RejectedReason`.
+- The `Content` field contains the content of the order that should be created.
+- If the request has been approved (`Status == Approved`), then a new `Order` will be created, otherwise (`Status == Rejected`) there will be the reason in `RejectedReason`.
 
 Once this object gets created/modified and synchronized, then the `CreateOrderRequestTrigger` will be run, that will invoke the `CreateOrderRequestHandler` function: 
 
 ```js
-
 const orderCollectionName = "Order";
 const requestCollectionName = "CreateOrderRequest";
 
@@ -206,45 +170,42 @@ exports = async function(changeEvent) {
     const requestId = changeEvent.documentKey._id;
     const db = context.services.get(serviceName).db(databaseName);
     
-    const payload = fullDoc.payload;
+    const content = fullDoc.content;
     const creatorId = fullDoc._creatorId;
 
-    var response;
+    var orderRef;
+    var status;
+    var rejectedReason;
 
-    if(payload.content.items == undefined) {
-      response = {
-        "status": "Rejected",
-        "rejectedReason": "There are no items in this order!"
-      }
+    if(content.items == undefined || content.items.length < 1) {
+      status = "Rejected";
+      rejectedReason = "There are no items in this order!";
     } else {
       const orderCollection = db.collection(orderCollectionName);
+      status = "Approved";
       
       const order = {
         "_id" : new BSON.ObjectId(),
         "_creatorId" : creatorId,
         "status": "Approved",
-        "content": payload.content,
+        "content": content,
       };
       
       const orderId = (await orderCollection.insertOne(order)).insertedId;
       
-      const orderRef = {
+      orderRef = {
         $ref: orderCollectionName,
         $id: orderId,
         $db: databaseName,
       };
-      
-      response = {
-        "order": orderRef,
-        "status": "Approved",
-      }
-  }
+    }
       
     const requestCollection = db.collection(requestCollectionName);
     const update = { 
       "$set": {
-        "status" : "Handled",
-        "response": response 
+        "status" : status,
+        "order": orderRef,
+        "rejectedReason": rejectedReason
       }
     }
     
@@ -258,9 +219,8 @@ exports = async function(changeEvent) {
 
 When the function gets run, the flow is as follows:
 - If the status of the `CreateOrderRequest` is not `Pending`, then we don't do anything.
-- Then, if there are no items in the order content (`payload.content.items == undefined`), we create a response, sets its status to `Rejected` and and specify the reason.
-- Otherwise we create an order, and add it to a response with its status set to `Approved`.
-- Finally, we update the request, by setting its status to `Handled` and adding the response we just created. 
+- Then, if there are no items in the order content (`content.items == undefined || content.items.length < 1`), we set the status to `Rejected` and fill `RejectedReason`.
+we create a response, sets its status to `Rejected` and and specify the reason.
+- Otherwise we create an order, and add it to the request and set the status to `Approved`.
 
 This function is quite simple, but could contain any kind of business logic related to the application. 
-
