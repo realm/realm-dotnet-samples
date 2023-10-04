@@ -9,36 +9,11 @@
         "createdAt": {
             "bsonType": "date"
         },
-        "payload": {
-            "properties": {
-                "orderId": {
-                    "bsonType": "objectId"
-                }
-            },
-            "required": [
-                "orderId"
-            ],
-            "title": "CancelOrderPayload",
-            "type": "object"
+        "orderId": {
+            "bsonType": "objectId"
         },
-        "response": {
-            "properties": {
-                "orderId": {
-                    "bsonType": "objectId"
-                },
-                "rejectedReason": {
-                    "bsonType": "string"
-                },
-                "status": {
-                    "bsonType": "string"
-                }
-            },
-            "required": [
-                "orderId",
-                "status"
-            ],
-            "title": "CancelOrderResponse",
-            "type": "object"
+        "rejectedReason": {
+            "bsonType": "string"
         },
         "status": {
             "bsonType": "string"
@@ -48,6 +23,7 @@
         "_creatorId",
         "_id",
         "createdAt",
+        "orderId",
         "status"
     ],
     "title": "CancelOrderRequest",

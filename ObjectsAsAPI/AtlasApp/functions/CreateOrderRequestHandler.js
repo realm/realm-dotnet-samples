@@ -15,24 +15,25 @@ exports = async function(changeEvent) {
     const requestId = changeEvent.documentKey._id;
     const db = context.services.get(serviceName).db(databaseName);
     
-    const payload = fullDoc.payload;
+    const content = fullDoc.content;
     const creatorId = fullDoc._creatorId;
 
     var response;
+    var status;
+    var rejectedReason;
 
-    if(payload.content.items == undefined) {
-      response = {
-        "status": "Rejected",
-        "rejectedReason": "There are no items in this order!"
-      }
+    if(content.items == undefined || content.items.length < 1) {
+      status = "Rejected";
+      rejectedReason = "There are no items in this order!";
     } else {
       const orderCollection = db.collection(orderCollectionName);
+      status = "Approved";
       
       const order = {
         "_id" : new BSON.ObjectId(),
         "_creatorId" : creatorId,
         "status": "Approved",
-        "content": payload.content,
+        "content": content,
       };
       
       const orderId = (await orderCollection.insertOne(order)).insertedId;
@@ -45,15 +46,15 @@ exports = async function(changeEvent) {
       
       response = {
         "order": orderRef,
-        "status": "Approved",
       }
   }
       
     const requestCollection = db.collection(requestCollectionName);
     const update = { 
       "$set": {
-        "status" : "Handled",
-        "response": response 
+        "status" : status,
+        "response": response,
+        "rejectedReason": rejectedReason
       }
     }
     

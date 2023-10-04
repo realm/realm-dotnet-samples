@@ -6,66 +6,47 @@
         "_id": {
             "bsonType": "objectId"
         },
-        "createdAt": {
-            "bsonType": "date"
-        },
-        "payload": {
+        "content": {
             "properties": {
-                "content": {
-                    "properties": {
-                        "createdAt": {
-                            "bsonType": "date"
-                        },
-                        "items": {
-                            "bsonType": "array",
-                            "items": {
-                                "properties": {
-                                    "itemName": {
-                                        "bsonType": "string"
-                                    },
-                                    "itemQuantity": {
-                                        "bsonType": "long"
-                                    }
-                                },
-                                "required": [
-                                    "itemQuantity"
-                                ],
-                                "title": "OrderItem",
-                                "type": "object"
+                "createdAt": {
+                    "bsonType": "date"
+                },
+                "items": {
+                    "bsonType": "array",
+                    "items": {
+                        "properties": {
+                            "itemName": {
+                                "bsonType": "string"
+                            },
+                            "itemQuantity": {
+                                "bsonType": "long"
                             }
                         },
-                        "orderName": {
-                            "bsonType": "string"
-                        }
-                    },
-                    "required": [
-                        "createdAt"
-                    ],
-                    "title": "OrderContent",
-                    "type": "object"
-                }
-            },
-            "required": [],
-            "title": "CreateOrderPayload",
-            "type": "object"
-        },
-        "response": {
-            "properties": {
-                "order": {
-                    "bsonType": "objectId"
+                        "required": [
+                            "itemQuantity"
+                        ],
+                        "title": "OrderItem",
+                        "type": "object"
+                    }
                 },
-                "rejectedReason": {
-                    "bsonType": "string"
-                },
-                "status": {
+                "orderName": {
                     "bsonType": "string"
                 }
             },
             "required": [
-                "status"
+                "createdAt"
             ],
-            "title": "CreateOrderResponse",
+            "title": "OrderContent",
             "type": "object"
+        },
+        "createdAt": {
+            "bsonType": "date"
+        },
+        "order": {
+            "bsonType": "objectId"
+        },
+        "rejectedReason": {
+            "bsonType": "string"
         },
         "status": {
             "bsonType": "string"

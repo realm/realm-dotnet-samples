@@ -1,7 +1,7 @@
 {
-    "response.order": {
+    "order": {
         "ref": "#/relationship/mongodb-atlas/ObjectsDatabase/Order",
-        "source_key": "response.order",
+        "source_key": "order",
         "foreign_key": "_id",
         "is_list": false
     }

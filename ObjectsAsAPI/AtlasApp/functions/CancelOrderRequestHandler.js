@@ -15,22 +15,19 @@ exports = async function(changeEvent) {
     const requestId = changeEvent.documentKey._id;
     const db = context.services.get(serviceName).db(databaseName);
     
-    const payload = fullDoc.payload;
     const creatorId = fullDoc._creatorId;
 
-    var orderId = payload.orderId;
+    var orderId = fullDoc.orderId;
     
     const orderCollection = db.collection(orderCollectionName);
     const order = await orderCollection.findOne({_id: orderId});
     
-    var response;
+    var status;
+    var rejectedReason;
 
-    if(order.content.items.length == 1) {
-      response = {
-        "status": "Rejected",
-        "orderId": orderId,
-        "rejectedReason": "There are too few items in this order to be cancelled!"
-      }
+    if(order.content.items.length <= 1) {
+      status = "Rejected";
+      rejectedReason = "There are too few items in this order to be cancelled!";
     } else {
       const update = { 
         "$set": {
@@ -40,17 +37,14 @@ exports = async function(changeEvent) {
       
       await orderCollection.updateOne({"_id": orderId}, update);
       
-      response = {
-        "status": "Approved",
-        "orderId": orderId,
-      }
+      status = "Approved";
     }
       
     const requestCollection = db.collection(requestCollectionName);
     const update = { 
       "$set": {
-        "status" : "Handled",
-        "response": response 
+        "status" : status,
+        "rejectedReason" : rejectedReason,
       }
     }
     
