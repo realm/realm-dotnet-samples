@@ -1,0 +1,5 @@
+{
+    "AppId": "<fill-me-in>",
+    "ServerUrl": "https://realm.mongodb.com",
+    "ServiceName": "mongodb-atlas"
+}

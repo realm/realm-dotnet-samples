@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AtlasSearch.Views.CompoundPage"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:vm="clr-namespace:AtlasSearch.ViewModels"
+             Title="Compound Demo">
+    <ContentPage.BindingContext>
+        <vm:CompoundViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Text="This demo showcases how to use Atlas Search to combine textual and geospatial queries. It searches through an Airbnb-like catalog of properties based on the location of the map and the search terms filled in the entry box."
+               Margin="10, 20, 10, 10" />
+
+        <maps:Map x:Name="SearchMap"
+                  HorizontalOptions="Center"
+                  WidthRequest="400"
+                  HeightRequest="400"
+                  ItemsSource="{Binding Results}"
+                  Grid.Row="1">
+            <maps:Map.ItemTemplate>
+                <DataTemplate>
+                    <maps:Pin Location="{Binding Address.MauiLocation}"
+                              Address="{Binding Address.Street}"
+                              Label="{Binding Name}"
+                              Type="SearchResult" />
+                </DataTemplate>    
+            </maps:Map.ItemTemplate>
+        </maps:Map>
+
+        <Ellipse Fill="#51c0f3"
+                 Opacity="0.5"
+                 InputTransparent="True"
+                 WidthRequest="300"
+                 HeightRequest="300"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center"
+                 Grid.Row="1"/>
+
+        <Entry Text="{Binding SearchQuery}"
+               Placeholder="Search the listing description"
+               Grid.Row="2"
+               Margin="10" />
+
+        <ActivityIndicator IsVisible="{Binding IsSearching}"
+                           IsRunning="{Binding IsSearching}"
+                           Grid.Row="3"
+                           VerticalOptions="Start" HorizontalOptions="Center" />
+
+        <ListView IsVisible="{Binding HasResults}"
+                  ItemsSource="{Binding Results}"
+                  Grid.Row="3"
+                  HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label Text="{Binding Name}" FontAttributes="Bold" Margin="10" />
+                            <Label Text="{Binding Address.StringAddress}" Grid.Row="1" Margin="10" />
+
+                            <Label HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="FillAndExpand"
+                                   Margin="10"
+                                   Grid.Row="2">
+                                <Label.FormattedText>
+                                    <MultiBinding Converter="{StaticResource HighlightFormattedStringConverter}" ConverterParameter="Description">
+                                        <Binding />
+                                    </MultiBinding>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

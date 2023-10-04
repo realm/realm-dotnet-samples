@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AtlasSearch.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="AtlasSearch.Views.MainPage"
+             Title="Atlas Search">
+    <ContentPage.BindingContext>
+        <vm:MainViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding InitializeSearchCommand}" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Start">
+
+            <Image
+                Source="atlas_search.png"
+                SemanticProperties.Description="Atlas Search"
+                HeightRequest="150"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Atlas App Services Search!"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Welcome to the Atlas Search demo. Select one of the options below to demo some of the experience you can build on top of FTS."
+                SemanticProperties.HeadingLevel="Level2"
+                FontSize="18"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Autocomplete"
+                SemanticProperties.Hint="Navigates to the autocomplete demo"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="autocomplete"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Compound"
+                SemanticProperties.Hint="Navigates to the compound demo"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="compound"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
