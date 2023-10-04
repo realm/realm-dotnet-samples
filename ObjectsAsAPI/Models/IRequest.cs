@@ -14,6 +14,8 @@ public interface IRequest<P, R>
 
     public RequestStatus Status { get; set; }
 
+    public string? RejectedReason { get; }
+
     public P? Payload { get; set; }
 
     public R? Response { get; set; }
@@ -25,21 +27,12 @@ public interface IPayload
 
 public interface IResponse
 {
-    public ResponseStatus Status { get; }
-
-    // Filled if Status == Rejected
-    public string? RejectedReason { get; }
 }
 
 public enum RequestStatus
 {
     Draft, // The user is still editing, it shouldn't be handled
     Pending, // User confirmed, waiting for backend
-    Handled, // Response created
-}
-
-public enum ResponseStatus
-{
-    Approved,
-    Rejected,
+    Approved, // Request handled, approved
+    Rejected, // Request handled, rejected
 }

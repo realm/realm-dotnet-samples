@@ -31,13 +31,14 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
     [MapTo("response")]
     public CancelOrderResponse? Response { get; set; }
 
+    [MapTo("rejectedReason")]
+    public string? RejectedReason { get; private set; }
+
     // Used in the UI
     public string? Description
     {
         get
         {
-            string? status = null;
-
             var requestType = "CancelOrder";
             var orderIdentifier = Payload?.OrderId.ToString();
 
@@ -46,15 +47,12 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
                 orderIdentifier = orderIdentifier[..10];
             }
 
-            if (Response != RealmValue.Null)
+            var status = Status switch
             {
-                status = Response?.Status switch
-                {
-                    ResponseStatus.Approved => "✅ ",
-                    ResponseStatus.Rejected => "❌ ",
-                    _ => throw new NotImplementedException(),
-                };
-            }
+                RequestStatus.Approved => "✅ ",
+                RequestStatus.Rejected => "❌ ",
+                _ => string.Empty,
+            };
 
             return $"{status}{requestType}{(string.IsNullOrEmpty(orderIdentifier) ? "" : $" - {orderIdentifier}")}";
         }
@@ -105,18 +103,4 @@ public partial class CancelOrderPayload : IEmbeddedObject, IPayload
 
 public partial class CancelOrderResponse : IEmbeddedObject, IResponse
 {
-    [MapTo("orderId")]
-    public ObjectId OrderId { get; set; }
-
-    [MapTo("status")]
-    private string _Status { get; set; } = ResponseStatus.Approved.ToString();
-
-    public ResponseStatus Status
-    {
-        get => Enum.Parse<ResponseStatus>(_Status);
-        private set => _Status = value.ToString();
-    }
-
-    [MapTo("rejectedReason")]
-    public string? RejectedReason { get; private set; }
 }

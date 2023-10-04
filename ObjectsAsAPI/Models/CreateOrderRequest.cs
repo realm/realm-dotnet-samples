@@ -31,13 +31,14 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
     [MapTo("response")]
     public CreateOrderResponse? Response { get; set; }
 
+    [MapTo("rejectedReason")]
+    public string? RejectedReason { get; private set; }
+
     // Used in the UI
     public string? Description
     {
         get
         {
-            string? status = null;
-
             var requestType = "CreateOrder";
             var orderIdentifier = Payload?.Content?.OrderName;
 
@@ -46,15 +47,12 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
                 orderIdentifier = orderIdentifier[..10];
             }
 
-            if (Response != RealmValue.Null)
+            var status = Status switch
             {
-                status = Response?.Status switch
-                {
-                    ResponseStatus.Approved => "✅ ",
-                    ResponseStatus.Rejected => "❌ ",
-                    _ => throw new NotImplementedException(),
-                };
-            }
+                RequestStatus.Approved => "✅ ",
+                RequestStatus.Rejected => "❌ ",
+                _ => string.Empty,
+            };
 
             return $"{status}{requestType}{(string.IsNullOrEmpty(orderIdentifier) ? "" : $" - {orderIdentifier}")}";
         }
@@ -69,7 +67,8 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
             {
                 RequestStatus.Draft => "Draft",
                 RequestStatus.Pending => "Pending",
-                RequestStatus.Handled => $"{Response?.Status}{(string.IsNullOrEmpty(Response?.RejectedReason) ? "" : $": \"{Response?.RejectedReason}\"")}",
+                RequestStatus.Approved => "Approved",
+                RequestStatus.Rejected => $"Rejected{(string.IsNullOrEmpty(RejectedReason) ? "" : $": \"{RejectedReason}\"")}",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -107,17 +106,5 @@ public partial class CreateOrderResponse : IEmbeddedObject, IResponse
 {
     [MapTo("order")]
     public Order? Order { get; private set; }
-
-    [MapTo("status")]
-    private string _Status { get; set; } = ResponseStatus.Approved.ToString();
-
-    public ResponseStatus Status
-    {
-        get => Enum.Parse<ResponseStatus>(_Status);
-        private set => _Status = value.ToString();
-    }
-
-    [MapTo("rejectedReason")]
-    public string? RejectedReason { get; private set; }
 }
 
