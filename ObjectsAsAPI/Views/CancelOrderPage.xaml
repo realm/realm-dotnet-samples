@@ -10,12 +10,12 @@
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <utils:StatusToStringConverter x:Key="StatusConverter" />
+            <utils:StatusToStringConverter x:Key="statusConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid RowDefinitions="Auto, Auto">
-            <Label Text="{Binding Request, Converter={StaticResource StatusConverter}}"
+            <Label Text="{Binding Request, Converter={StaticResource statusConverter}}"
                    Padding="5"
                    FontSize="Large"
                    BackgroundColor="AliceBlue"
