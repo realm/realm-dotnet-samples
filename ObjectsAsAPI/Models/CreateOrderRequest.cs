@@ -4,7 +4,7 @@ using Realms;
 
 namespace ObjectsAsAPI.Models;
 
-public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayload, CreateOrderResponse>
+public partial class CreateOrderRequest : IRealmObject
 {
     [PrimaryKey]
     [MapTo("_id")]
@@ -25,14 +25,14 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
     [MapTo("createdAt")]
     public DateTimeOffset CreatedAt { get; private set; }
 
-    [MapTo("payload")]
-    public CreateOrderPayload? Payload { get; set; }
-
-    [MapTo("response")]
-    public CreateOrderResponse? Response { get; set; }
-
     [MapTo("rejectedReason")]
     public string? RejectedReason { get; private set; }
+
+    [MapTo("content")]
+    public OrderContent? Content { get; set; }
+
+    [MapTo("order")]
+    public Order? Order { get; private set; }
 
     // Used in the UI
     public string? Description
@@ -40,7 +40,7 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
         get
         {
             var requestType = "CreateOrder";
-            var orderIdentifier = Payload?.Content?.OrderName;
+            var orderIdentifier = Content?.OrderName;
 
             if (orderIdentifier?.Length > 10)
             {
@@ -95,16 +95,3 @@ public partial class CreateOrderRequest : IRealmObject, IRequest<CreateOrderPayl
         }
     }
 }
-
-public partial class CreateOrderPayload : IEmbeddedObject, IPayload
-{
-    [MapTo("content")]
-    public OrderContent? Content { get; set; }
-}
-
-public partial class CreateOrderResponse : IEmbeddedObject, IResponse
-{
-    [MapTo("order")]
-    public Order? Order { get; private set; }
-}
-

@@ -4,7 +4,7 @@ using Realms;
 
 namespace ObjectsAsAPI.Models;
 
-public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayload, CancelOrderResponse>
+public partial class CancelOrderRequest : IRealmObject
 {
     [PrimaryKey]
     [MapTo("_id")]
@@ -25,14 +25,11 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
     [MapTo("createdAt")]
     public DateTimeOffset CreatedAt { get; private set; }
 
-    [MapTo("payload")]
-    public CancelOrderPayload? Payload { get; set; }
-
-    [MapTo("response")]
-    public CancelOrderResponse? Response { get; set; }
-
     [MapTo("rejectedReason")]
     public string? RejectedReason { get; private set; }
+
+    [MapTo("orderId")]
+    public ObjectId OrderId { get; set; }
 
     // Used in the UI
     public string? Description
@@ -40,7 +37,7 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
         get
         {
             var requestType = "CancelOrder";
-            var orderIdentifier = Payload?.OrderId.ToString();
+            var orderIdentifier = OrderId.ToString();
 
             if (orderIdentifier?.Length > 10)
             {
@@ -59,6 +56,7 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
     }
 
     // Used in the UI
+    // Used in the UI
     public string? StatusString
     {
         get
@@ -67,7 +65,8 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
             {
                 RequestStatus.Draft => "Draft",
                 RequestStatus.Pending => "Pending",
-                RequestStatus.Handled => $"{Response?.Status}{(string.IsNullOrEmpty(Response?.RejectedReason) ? "" : $": \"{Response?.RejectedReason}\"")}",
+                RequestStatus.Approved => "Approved",
+                RequestStatus.Rejected => $"Rejected{(string.IsNullOrEmpty(RejectedReason) ? "" : $": \"{RejectedReason}\"")}",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -93,14 +92,4 @@ public partial class CancelOrderRequest : IRealmObject, IRequest<CancelOrderPayl
             RaisePropertyChanged(nameof(Description));
         }
     }
-}
-
-public partial class CancelOrderPayload : IEmbeddedObject, IPayload
-{
-    [MapTo("orderId")]
-    public ObjectId OrderId { get; set; }
-}
-
-public partial class CancelOrderResponse : IEmbeddedObject, IResponse
-{
 }

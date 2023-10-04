@@ -13,7 +13,8 @@ public class EnumToColorConverter : IValueConverter
             {
                 RequestStatus.Draft => Colors.Gray,
                 RequestStatus.Pending => Colors.YellowGreen,
-                RequestStatus.Handled => Colors.Green,
+                RequestStatus.Approved => Colors.Green,
+                RequestStatus.Rejected => Colors.Red,
                 _ => throw new NotImplementedException(),
             };
         }

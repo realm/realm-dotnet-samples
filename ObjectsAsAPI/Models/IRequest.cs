@@ -2,9 +2,7 @@
 
 namespace ObjectsAsAPI.Models;
 
-public interface IRequest<P, R>
-    where P: IPayload
-    where R: IResponse
+public interface IRequest
 {
     public ObjectId Id { get; }
 
@@ -15,18 +13,6 @@ public interface IRequest<P, R>
     public RequestStatus Status { get; set; }
 
     public string? RejectedReason { get; }
-
-    public P? Payload { get; set; }
-
-    public R? Response { get; set; }
-}
-
-public interface IPayload
-{
-}
-
-public interface IResponse
-{
 }
 
 public enum RequestStatus

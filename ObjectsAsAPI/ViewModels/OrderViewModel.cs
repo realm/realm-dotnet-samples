@@ -27,10 +27,7 @@ public partial class OrderViewModel : BaseViewModel
         var request = new CancelOrderRequest
         {
             Status = RequestStatus.Pending,
-            Payload = new CancelOrderPayload
-            {
-                OrderId = Order.Id,
-            },
+            OrderId = Order.Id,
         };
 
         realm.Write(() =>

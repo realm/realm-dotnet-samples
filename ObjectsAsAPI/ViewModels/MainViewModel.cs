@@ -37,15 +37,10 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     public async Task AddCreateOrderRequest()
     {
-        var requestPayload = new CreateOrderPayload
-        {
-            Content = new OrderContent(),
-        };
-
         var request = new CreateOrderRequest
         {
             Status = RequestStatus.Draft,
-            Payload = requestPayload,
+            Content = new OrderContent(),
         };
 
         _realm.Write(() =>

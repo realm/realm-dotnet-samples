@@ -72,7 +72,7 @@ public partial class CreateOrderViewModel : BaseViewModel
             return;
         }
 
-        OrderContent = value.Payload?.Content!;
+        OrderContent = value.Content!;
         IsDraft = value.Status == RequestStatus.Draft;
     }
 
