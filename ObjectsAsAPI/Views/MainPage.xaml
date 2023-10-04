@@ -18,6 +18,7 @@
         <ResourceDictionary>
             <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
             <utils:EnumToColorConverter x:Key="enumToColorConverter"/>
+            <utils:RequestToDescriptionConverter x:Key="requestToDescriptionConverter"/>
             <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -109,8 +110,14 @@
                                   Padding="10">
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Description}"
-                                       FontSize="Body"/>
+                                       FontSize="Body">
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource requestToDescriptionConverter}">
+                                            <Binding Path="." />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
                                 <Label Grid.Row="1" Grid.Column="0"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"
@@ -159,8 +166,14 @@
                                   Padding="10">
                                 <Label Grid.Row="0" Grid.Column="0"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Description}"
-                                       FontSize="Body"/>
+                                       FontSize="Body">
+                                   <Label.Text>
+                                        <MultiBinding Converter="{StaticResource requestToDescriptionConverter}">
+                                            <Binding Path="." />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                   </Label.Text>
+                                </Label>
                                 <Label Grid.Row="1" Grid.Column="0"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"

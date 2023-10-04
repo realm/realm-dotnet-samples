@@ -34,30 +34,6 @@ public partial class CreateOrderRequest : IRealmObject, IRequest
     [MapTo("order")]
     public Order? Order { get; private set; }
 
-    // Used in the UI
-    public string? Description
-    {
-        get
-        {
-            var requestType = "CreateOrder";
-            var orderIdentifier = Content?.OrderName;
-
-            if (orderIdentifier?.Length > 10)
-            {
-                orderIdentifier = orderIdentifier[..10];
-            }
-
-            var status = Status switch
-            {
-                RequestStatus.Approved => "✅ ",
-                RequestStatus.Rejected => "❌ ",
-                _ => string.Empty,
-            };
-
-            return $"{status}{requestType}{(string.IsNullOrEmpty(orderIdentifier) ? "" : $" - {orderIdentifier}")}";
-        }
-    }
-
     public CreateOrderRequest()
     {
         if (RealmService.CurrentUser == null)
@@ -74,7 +50,6 @@ public partial class CreateOrderRequest : IRealmObject, IRequest
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
-            RaisePropertyChanged(nameof(Description));
         }
     }
 }

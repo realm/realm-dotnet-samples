@@ -10,7 +10,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <utils:StatusConverter x:Key="StatusConverter" />
+            <utils:StatusToStringConverter x:Key="StatusConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>

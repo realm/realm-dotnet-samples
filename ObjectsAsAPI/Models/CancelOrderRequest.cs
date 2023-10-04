@@ -31,30 +31,6 @@ public partial class CancelOrderRequest : IRealmObject, IRequest
     [MapTo("orderId")]
     public ObjectId OrderId { get; set; }
 
-    // Used in the UI
-    public string? Description
-    {
-        get
-        {
-            var requestType = "CancelOrder";
-            var orderIdentifier = OrderId.ToString();
-
-            if (orderIdentifier?.Length > 10)
-            {
-                orderIdentifier = orderIdentifier[..10];
-            }
-
-            var status = Status switch
-            {
-                RequestStatus.Approved => "✅ ",
-                RequestStatus.Rejected => "❌ ",
-                _ => string.Empty,
-            };
-
-            return $"{status}{requestType}{(string.IsNullOrEmpty(orderIdentifier) ? "" : $" - {orderIdentifier}")}";
-        }
-    }
-
     public CancelOrderRequest()
     {
         if (RealmService.CurrentUser == null)
@@ -71,7 +47,6 @@ public partial class CancelOrderRequest : IRealmObject, IRequest
         if (propertyName == nameof(_Status))
         {
             RaisePropertyChanged(nameof(Status));
-            RaisePropertyChanged(nameof(Description));
         }
     }
 }

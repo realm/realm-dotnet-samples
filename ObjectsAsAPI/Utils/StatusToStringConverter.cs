@@ -4,7 +4,7 @@ using ObjectsAsAPI.Models;
 
 namespace ObjectsAsAPI.Utils;
 
-public class StatusConverter : IValueConverter
+public class StatusToStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
