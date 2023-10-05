@@ -173,7 +173,7 @@ exports = async function(changeEvent) {
     const content = fullDoc.content;
     const creatorId = fullDoc._creatorId;
 
-    var orderRef;
+    var orderId;
     var status;
     var rejectedReason;
 
@@ -191,20 +191,14 @@ exports = async function(changeEvent) {
         "content": content,
       };
       
-      const orderId = (await orderCollection.insertOne(order)).insertedId;
-      
-      orderRef = {
-        $ref: orderCollectionName,
-        $id: orderId,
-        $db: databaseName,
-      };
-    }
+      orderId = (await orderCollection.insertOne(order)).insertedId;
+  }
       
     const requestCollection = db.collection(requestCollectionName);
     const update = { 
       "$set": {
         "status" : status,
-        "order": orderRef,
+        "order": orderId,
         "rejectedReason": rejectedReason
       }
     }
