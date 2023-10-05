@@ -1,0 +1,31 @@
+{
+    "properties": {
+        "_creatorId": {
+            "bsonType": "string"
+        },
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "createdAt": {
+            "bsonType": "date"
+        },
+        "orderId": {
+            "bsonType": "objectId"
+        },
+        "rejectedReason": {
+            "bsonType": "string"
+        },
+        "status": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_creatorId",
+        "_id",
+        "createdAt",
+        "orderId",
+        "status"
+    ],
+    "title": "CancelOrderRequest",
+    "type": "object"
+}
