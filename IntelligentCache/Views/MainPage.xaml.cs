@@ -1,4 +1,4 @@
-﻿namespace IntelligentCache;
+﻿namespace IntelligentCache.Views;
 
 public partial class MainPage : ContentPage
 {
