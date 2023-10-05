@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
+             xmlns:utils="clr-namespace:ObjectsAsAPI.Utils"
+             x:Class="ObjectsAsAPI.Views.MainPage"
+             x:Name="mainPage"
+             Title="Orders">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Logout" IconImageSource="logout.png" Order="Primary" Command="{Binding LogoutCommand}"/>
+        <ToolbarItem Text="Create Order" IconImageSource="add.png" Order="Secondary" Command="{Binding AddCreateOrderRequestCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.BindingContext>
+        <vm:MainViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <utils:UtcToLocalTimeConverter x:Key="utcToLocalTimeConverter"/>
+            <utils:EnumToColorConverter x:Key="enumToColorConverter"/>
+            <utils:RequestToDescriptionConverter x:Key="requestToDescriptionConverter"/>
+            <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid RowDefinitions="2*, 50, 1.2*, 1.2*">
+            <ListView ItemsSource="{Binding Orders}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  Grid.Row="0">
+                <ListView.Behaviors>
+                    <toolkit:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
+                        Command="{Binding OpenOrderCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Delete" IsDestructive="True" 
+                                       Command="{Binding Path=BindingContext.DeleteOrderCommand, Source={x:Reference mainPage}}" 
+                                       CommandParameter="{Binding .}" />
+                            </ViewCell.ContextActions>
+                            <Grid RowDefinitions="*, 1*"
+                                  ColumnDefinitions="2*, 1*"
+                                  Padding="10">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Content.OrderName}"
+                                       FontSize="Body"/>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Content.CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"
+                                       FontSize="Small"
+                                       TextColor="Gray"/>
+                                <Label Grid.RowSpan="2" Grid.Column="1"
+                                       Text="{Binding Status}"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding Status, Converter={StaticResource enumToColorConverter}}"
+                                       FontSize="Caption"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Grid.Row="1" Orientation="Horizontal"
+                            Padding="10,0,20,0"
+                            BackgroundColor="#E3FCF7">
+                <Label Text="Requests"
+                        FontSize="Large"
+                        HorizontalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        HorizontalOptions="StartAndExpand"/>
+                <Button ImageSource="{Binding ConnectionStatusIcon}"
+                            Command="{Binding ChangeConnectionStatusCommand}"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"/>
+            </StackLayout>
+            <ListView ItemsSource="{Binding CreateOrderRequests}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  Grid.Row="2">
+                <ListView.Behaviors>
+                    <toolkit:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
+                        Command="{Binding OpenRequestCommand}"/>
+                </ListView.Behaviors>
+                <ListView.Header>
+                    <Grid BackgroundColor="LightGray">
+                        <Label Margin="5, 5"
+                           Text="CreateOrderRequests"
+                           FontSize="14"
+                           FontAttributes="Bold" />
+                    </Grid>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Delete" IsDestructive="True" 
+                                       Command="{Binding Path=BindingContext.DeleteRequestCommand, Source={x:Reference mainPage}}" 
+                                       CommandParameter="{Binding .}" />
+                            </ViewCell.ContextActions>
+                            <Grid RowDefinitions="*, 1*"
+                                  ColumnDefinitions="2*, 1*"
+                                  Padding="10">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       FontSize="Body">
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource requestToDescriptionConverter}">
+                                            <Binding Path="." />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"
+                                       FontSize="Small"
+                                       TextColor="Gray"/>
+                                <Label Grid.RowSpan="2" Grid.Column="1"
+                                       Text="{Binding Status}"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding Status, Converter={StaticResource enumToColorConverter}}"
+                                       FontSize="Caption"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ListView ItemsSource="{Binding CancelOrderRequests}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  Grid.Row="3">
+                <ListView.Behaviors>
+                    <toolkit:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" 
+                        Command="{Binding OpenRequestCommand}"/>
+                </ListView.Behaviors>
+                <ListView.Header>
+                    <Grid BackgroundColor="LightGray">
+                        <Label Margin="5, 5"
+                           Text="CancelOrderRequests"
+                           FontSize="14"
+                           FontAttributes="Bold" />
+                    </Grid>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Delete" IsDestructive="True" 
+                                       Command="{Binding Path=BindingContext.DeleteRequestCommand, Source={x:Reference mainPage}}" 
+                                       CommandParameter="{Binding .}" />
+                            </ViewCell.ContextActions>
+                            <Grid RowDefinitions="*, 1*"
+                                  ColumnDefinitions="2*, 1*"
+                                  Padding="10">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       FontSize="Body">
+                                   <Label.Text>
+                                        <MultiBinding Converter="{StaticResource requestToDescriptionConverter}">
+                                            <Binding Path="." />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                   </Label.Text>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding CreatedAt, Converter={StaticResource utcToLocalTimeConverter}, StringFormat='{0:HH:mm:ss, d/MM/yy}'}"
+                                       FontSize="Small"
+                                       TextColor="Gray"/>
+                                <Label Grid.RowSpan="2" Grid.Column="1"
+                                       Text="{Binding Status}"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding Status, Converter={StaticResource enumToColorConverter}}"
+                                       FontSize="Caption"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

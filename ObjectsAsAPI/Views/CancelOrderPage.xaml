@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ObjectsAsAPI.Views.CancelOrderPage"
+             xmlns:vm="clr-namespace:ObjectsAsAPI.ViewModels"
+             xmlns:utils="clr-namespace:ObjectsAsAPI.Utils"
+             Title="CancelOrderPage">
+    <ContentPage.BindingContext>
+        <vm:CancelOrderViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <utils:StatusToStringConverter x:Key="statusConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, Auto">
+            <Label Text="{Binding Request, Converter={StaticResource statusConverter}}"
+                   Padding="5"
+                   FontSize="Large"
+                   BackgroundColor="AliceBlue"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   Grid.Row="0"/>
+            <Label Text="{Binding Request.OrderId, StringFormat='OrderId: {0}'}"
+                   Padding="5"
+                   FontSize="Medium"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Start"
+                   Grid.Row="1"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

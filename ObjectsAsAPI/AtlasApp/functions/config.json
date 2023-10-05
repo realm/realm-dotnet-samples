@@ -1,0 +1,12 @@
+[
+    {
+        "name": "CreateOrderRequestHandler",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "CancelOrderRequestHandler",
+        "private": false,
+        "disable_arg_logs": true
+    }
+]
