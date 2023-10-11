@@ -27,10 +27,10 @@ public partial class Restaurant : IRealmObject
 
 public enum CuisineType
 {
-    American,
-    Italian,
-    Continental,
-    Bakery,
-    Seafood,
+    American = 1,
+    Italian = 2,
+    Continental = 3,
+    Bakery = 4,
+    Seafood = 5,
 }
 

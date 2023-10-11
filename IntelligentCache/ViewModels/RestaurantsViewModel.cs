@@ -21,14 +21,14 @@ public partial class RestaurantsViewModel : BaseViewModel
         _realm = RealmService.GetMainThreadRealm();
     }
 
-    partial void OnCuisineChanged(CuisineType value)
+    partial void OnCuisineChanging(CuisineType oldValue, CuisineType newValue)
     {
-        Restaurants = _realm.All<Restaurant>().Filter($"cuisine == $0", value.ToString());
-
-        foreach (var res in Restaurants)
+        _realm.Write(() =>
         {
-            Console.WriteLine(res.Name);
-        }
+            _realm.Add(new RestaurantsRequest(newValue));
+        });
+
+        Restaurants = _realm.All<Restaurant>().Filter($"cuisine == $0", newValue.ToString());
     }
 }
 
