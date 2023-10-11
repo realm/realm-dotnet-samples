@@ -2,6 +2,7 @@
 using Realms;
 using Realms.Sync;
 using System.Diagnostics.CodeAnalysis;
+using IntelligentCache.Models;
 
 namespace IntelligentCache.Services;
 
@@ -105,9 +106,7 @@ public static class RealmService
         {
             PopulateInitialSubscriptions = (realm) =>
             {
-                //realm.Subscriptions.Add(realm.All<Order>().Where(r => r.CreatorId == CurrentUser.Id));
-                //realm.Subscriptions.Add(realm.All<CreateOrderRequest>().Where(r => r.CreatorId == CurrentUser.Id));
-                //realm.Subscriptions.Add(realm.All<CancelOrderRequest>().Where(r => r.CreatorId == CurrentUser.Id));
+                realm.Subscriptions.Add(realm.All<Restaurant>());
             },
         };
 

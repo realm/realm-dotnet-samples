@@ -1,11 +1,10 @@
 ﻿namespace IntelligentCache.Views;
 
-public partial class MainPage : ContentPage
+public partial class RestaurantsPage : ContentPage
 {
-    public MainPage()
+    public RestaurantsPage()
     {
         InitializeComponent();
     }
 }
-
 
