@@ -58,6 +58,7 @@
 	  <None Remove="Views\" />
 	  <None Remove="Services\" />
 	  <None Remove="Models\" />
+	  <None Remove="Images\*" />
 	</ItemGroup>
 	<ItemGroup>
 	  <MauiImage Include="Resources\Images\logout.svg" />
