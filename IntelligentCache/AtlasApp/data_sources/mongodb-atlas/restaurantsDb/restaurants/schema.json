@@ -1,0 +1,24 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "borough": {
+            "bsonType": "string"
+        },
+        "cuisine": {
+            "bsonType": "string"
+        },
+        "name": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id",
+        "borough",
+        "cuisine",
+        "name"
+    ],
+    "title": "restaurants",
+    "type": "object"
+}
