@@ -7,7 +7,7 @@ For example, Atlas can:
 - Implement automatic refresh logic of the data at specific intervals;
 - Synchronize relevant data to clients with Device Sync;
 
-In this app we are going to show a simple example of this approach. The app allows the user to retrieve a list of restaurants depending on the desired cuisine type. For simplicity, we're going to use the [sample restaurants dataset](https://www.mongodb.com/docs/atlas/sample-data/sample-restaurants/#std-label-sample-restaurants) (that contains various information about New York restaurants) and the [Data API](https://www.mongodb.com/docs/atlas/app-services/data-api/) to simulate an external REST service that Atlas is interfacing to. In a later section we are going to see how we can reduce how often Atlas need to request data to the external service.
+In this app we are going to show a simple example of this approach. The app allows the user to retrieve a list of restaurants depending on the desired cuisine type. For simplicity, we're going to use the [sample restaurants dataset](https://www.mongodb.com/docs/atlas/sample-data/sample-restaurants/#std-label-sample-restaurants) (that contains various information about New York restaurants) and the [Data API](https://www.mongodb.com/docs/atlas/app-services/data-api/) to simulate an external REST service that Atlas is interfacing to. In a later section we are going to see how we can reduce how often Atlas needs to request data to the external service.
 
 ## Prerequisites
 
